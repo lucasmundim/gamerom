@@ -14,6 +14,31 @@ module Rom
       true
     end
 
+    desc 'install', 'Install game'
+    option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to update", enum: Rom::PLATFORM.keys
+    def install(game_id)
+      puts "installing game #{game_id} on #{options[:platform]} platform..."
+      games = YAML.load_file(File.expand_path("~/.rom/cache/#{options[:platform]}.yml"))
+      response = RestClient::Request.execute(
+        method: :get,
+        url: "https://coolrom.com.au/downloader.php?id=#{game_id}",
+        headers: {
+          'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36",
+        },
+        raw_response: true,
+        log: Logger.new(STDOUT),
+      )
+      if response.code == 200
+        filename = response.headers[:content_disposition].split('; ')[1].split('"')[1]
+        FileUtils.mkdir_p(File.expand_path("~/.rom/games/#{options[:platform]}"))
+        FileUtils.cp(response.file.path, File.expand_path("~/.rom/games/#{options[:platform]}/#{filename}"))
+        puts "Game installed"
+      end
+    rescue => e
+      puts e.message
+      exit 1
+    end
+
     desc 'list', 'List games'
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to update", enum: Rom::PLATFORM.keys
     def list
