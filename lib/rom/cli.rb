@@ -29,6 +29,8 @@ module Rom
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to update", enum: Rom::PLATFORM.keys
     def install(game_id)
       puts "installing game #{game_id} on #{options[:platform]} platform..."
+      game = find_game(options[:platform], game_id)
+      puts "#{game[:id]} - #{game[:name]} - #{game[:region]}"
       games = YAML.load_file(File.expand_path("~/.rom/cache/#{options[:platform]}.yml"))
       response = RestClient::Request.execute(
         method: :get,
@@ -41,8 +43,8 @@ module Rom
       )
       if response.code == 200
         filename = response.headers[:content_disposition].split('; ')[1].split('"')[1]
-        FileUtils.mkdir_p(File.expand_path("~/.rom/games/#{options[:platform]}"))
-        FileUtils.cp(response.file.path, File.expand_path("~/.rom/games/#{options[:platform]}/#{filename}"))
+        FileUtils.mkdir_p(File.expand_path("~/.rom/games/#{options[:platform]}/#{game[:region]}"))
+        FileUtils.cp(response.file.path, File.expand_path("~/.rom/games/#{options[:platform]}/#{game[:region]}/#{filename}"))
         puts "Game installed"
       end
     rescue => e
