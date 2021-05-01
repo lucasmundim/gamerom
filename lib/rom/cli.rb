@@ -28,6 +28,7 @@ module Rom
     desc 'install', 'Install game'
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
     def install(game_id)
+      FileUtils.mkdir_p(File.expand_path("~/.rom/logs"))
       puts "installing game #{game_id} on #{options[:platform]} platform..."
       game = find_game(options[:platform], game_id)
       puts "#{game[:id]} - #{game[:name]} - #{game[:region]}"
@@ -38,7 +39,7 @@ module Rom
           'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36",
         },
         raw_response: true,
-        log: Logger.new(STDOUT),
+        log: Logger.new(File.expand_path("~/.rom/logs/install.log")),
       )
       if response.code == 200
         filename = response.headers[:content_disposition].split('; ')[1].split('"')[1]
