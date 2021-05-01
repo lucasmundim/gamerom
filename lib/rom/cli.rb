@@ -98,7 +98,7 @@ module Rom
 
       letters.each do |letter|
         print "#{letter} "
-        page = Nokogiri::HTML(RestClient.get("https://coolrom.com.au/roms/psx/#{letter}/"))
+        page = Nokogiri::HTML(RestClient.get("https://coolrom.com.au/roms/#{options[:platform]}/#{letter}/"))
         regions = page.css('input.region').map { |i| i["name"] }
         regions.each do |region|
           games.append *page.css("div.#{region} a").map { |game|
