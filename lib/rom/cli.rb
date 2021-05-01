@@ -31,7 +31,6 @@ module Rom
       puts "installing game #{game_id} on #{options[:platform]} platform..."
       game = find_game(options[:platform], game_id)
       puts "#{game[:id]} - #{game[:name]} - #{game[:region]}"
-      games = YAML.load_file(File.expand_path("~/.rom/cache/#{options[:platform]}.yml"))
       response = RestClient::Request.execute(
         method: :get,
         url: "https://coolrom.com.au/downloader.php?id=#{game_id}",
