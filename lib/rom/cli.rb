@@ -85,6 +85,17 @@ module Rom
       exit 1
     end
 
+    desc 'regions', 'List avaiable regions'
+    option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
+    def regions
+      puts "listing avaiable regions for #{options[:platform]} platform..."
+      games = YAML.load_file(File.expand_path("~/.rom/cache/#{options[:platform]}.yml"))
+      puts games.map { |game| game[:region] }.sort.uniq
+    rescue => e
+      puts e.message
+      exit 1
+    end
+
     desc 'search', 'Search games'
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
     def search(keyword)
