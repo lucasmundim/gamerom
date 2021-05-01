@@ -51,6 +51,18 @@ module Rom
       exit 1
     end
 
+    desc 'install_all', 'Install all games'
+    option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to update", enum: Rom::PLATFORM.keys
+    def install_all
+      games = YAML.load_file(File.expand_path("~/.rom/cache/#{options[:platform]}.yml"))
+      games.each do |game|
+        install(game[:id])
+      end
+    rescue => e
+      puts e.message
+      exit 1
+    end
+
     desc 'list', 'List games'
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to update", enum: Rom::PLATFORM.keys
     def list
