@@ -36,6 +36,19 @@ module Rom
       exit 1
     end
 
+    desc 'search', 'Search games'
+    option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to update", enum: Rom::PLATFORM.keys
+    def search(keyword)
+      puts "searching avaiable games for #{options[:platform]} platform..."
+      games = YAML.load_file(File.expand_path("~/.rom/cache/#{options[:platform]}.yml"))
+      games.each { |game|
+        puts "#{game[:id]} - #{game[:name]} - #{game[:region]}" if game[:name] =~ /#{keyword}/i
+      }
+    rescue => e
+      puts e.message
+      exit 1
+    end
+
     desc 'update', 'Update local database'
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to update", enum: Rom::PLATFORM.keys
     option :v, type: :boolean, default: false, desc: "Show verbose backtrace"
