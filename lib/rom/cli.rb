@@ -53,10 +53,11 @@ module Rom
 
     desc 'install_all', 'Install all games'
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
+    option :region, :aliases => ['-r'], type: :string, required: false, desc: "Only install from the specified region"
     def install_all
       games = YAML.load_file(File.expand_path("~/.rom/cache/#{options[:platform]}.yml"))
       games.each do |game|
-        install(game[:id])
+        install(game[:id]) if options[:region].nil? || game[:region] == options[:region]
       end
     rescue => e
       puts e.message
@@ -65,10 +66,13 @@ module Rom
 
     desc 'list', 'List games'
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
+    option :region, :aliases => ['-r'], type: :string, required: false, desc: "Only install from the specified region"
     def list
       puts "listing avaiable games for #{options[:platform]} platform..."
       games = YAML.load_file(File.expand_path("~/.rom/cache/#{options[:platform]}.yml"))
-      puts games.map { |game| "#{game[:id]} - #{game[:name]} - #{game[:region]}" }
+      games.each do |game|
+        puts "#{game[:id]} - #{game[:name]} - #{game[:region]}" if options[:region].nil? || game[:region] == options[:region]
+      end
     rescue => e
       puts e.message
       exit 1
@@ -98,11 +102,12 @@ module Rom
 
     desc 'search', 'Search games'
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
+    option :region, :aliases => ['-r'], type: :string, required: false, desc: "Only install from the specified region"
     def search(keyword)
       puts "searching avaiable games for #{options[:platform]} platform..."
       games = YAML.load_file(File.expand_path("~/.rom/cache/#{options[:platform]}.yml"))
       games.each { |game|
-        puts "#{game[:id]} - #{game[:name]} - #{game[:region]}" if game[:name] =~ /#{keyword}/i
+        puts "#{game[:id]} - #{game[:name]} - #{game[:region]}" if game[:name] =~ /#{keyword}/i && (options[:region].nil? || game[:region] == options[:region])
       }
     rescue => e
       puts e.message
