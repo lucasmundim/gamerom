@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     rom (0.1.0)
+      nokogiri (~> 1.11.3)
       rest-client (~> 2.1.0)
       thor (~> 1.1.0)
 
@@ -19,9 +20,12 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2021.0225)
     netrc (0.11.0)
+    nokogiri (1.11.3-x86_64-darwin)
+      racc (~> 1.4)
     parallel (1.20.1)
     parser (3.0.1.0)
       ast (~> 2.4.1)
+    racc (1.5.2)
     rainbow (3.0.0)
     rake (13.0.3)
     regexp_parser (2.1.1)
