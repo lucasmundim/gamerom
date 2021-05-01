@@ -14,6 +14,20 @@ module Rom
       true
     end
 
+    desc 'info', 'Info for a game'
+    option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to update", enum: Rom::PLATFORM.keys
+    def info(game_id)
+      puts "showing info for game #{game_id} on #{options[:platform]} platform..."
+      games = YAML.load_file(File.expand_path("~/.rom/cache/#{options[:platform]}.yml"))
+      game = games.find do |game|
+        game[:id] == game_id.to_i
+      end
+      puts "#{game[:id]} - #{game[:name]} - #{game[:region]}"
+    rescue => e
+      puts e.message
+      exit 1
+    end
+
     desc 'install', 'Install game'
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to update", enum: Rom::PLATFORM.keys
     def install(game_id)
