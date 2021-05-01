@@ -14,6 +14,17 @@ module Rom
       true
     end
 
+    desc 'list', 'List games'
+    option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to update", enum: Rom::PLATFORM.keys
+    def list
+      puts "listing avaiable games for #{options[:platform]} platform..."
+      games = YAML.load_file(File.expand_path("~/.rom/cache/#{options[:platform]}.yml"))
+      puts games.map { |game| "#{game[:id]} - #{game[:name]} - #{game[:region]}" }
+    rescue => e
+      puts e.message
+      exit 1
+    end
+
     desc 'platform', 'List avaiable platform'
     option :v, type: :boolean, default: false, desc: "Show verbose backtrace"
     def platform
