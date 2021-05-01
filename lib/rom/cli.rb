@@ -18,10 +18,7 @@ module Rom
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to update", enum: Rom::PLATFORM.keys
     def info(game_id)
       puts "showing info for game #{game_id} on #{options[:platform]} platform..."
-      games = YAML.load_file(File.expand_path("~/.rom/cache/#{options[:platform]}.yml"))
-      game = games.find do |game|
-        game[:id] == game_id.to_i
-      end
+      game = find_game(options[:platform], game_id)
       puts "#{game[:id]} - #{game[:name]} - #{game[:region]}"
     rescue => e
       puts e.message
@@ -122,6 +119,14 @@ module Rom
     desc 'version', 'Print program version'
     def version
       puts Rom::VERSION
+    end
+
+    private
+    def find_game(platform, game_id)
+      games = YAML.load_file(File.expand_path("~/.rom/cache/#{platform}.yml"))
+      games.find do |game|
+        game[:id] == game_id.to_i
+      end
     end
   end
 end
