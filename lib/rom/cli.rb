@@ -15,7 +15,7 @@ module Rom
     end
 
     desc 'info', 'Info for a game'
-    option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to update", enum: Rom::PLATFORM.keys
+    option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
     def info(game_id)
       puts "showing info for game #{game_id} on #{options[:platform]} platform..."
       game = find_game(options[:platform], game_id)
@@ -26,7 +26,7 @@ module Rom
     end
 
     desc 'install', 'Install game'
-    option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to update", enum: Rom::PLATFORM.keys
+    option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
     def install(game_id)
       puts "installing game #{game_id} on #{options[:platform]} platform..."
       game = find_game(options[:platform], game_id)
@@ -52,7 +52,7 @@ module Rom
     end
 
     desc 'install_all', 'Install all games'
-    option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to update", enum: Rom::PLATFORM.keys
+    option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
     def install_all
       games = YAML.load_file(File.expand_path("~/.rom/cache/#{options[:platform]}.yml"))
       games.each do |game|
@@ -64,7 +64,7 @@ module Rom
     end
 
     desc 'list', 'List games'
-    option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to update", enum: Rom::PLATFORM.keys
+    option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
     def list
       puts "listing avaiable games for #{options[:platform]} platform..."
       games = YAML.load_file(File.expand_path("~/.rom/cache/#{options[:platform]}.yml"))
@@ -86,7 +86,7 @@ module Rom
     end
 
     desc 'search', 'Search games'
-    option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to update", enum: Rom::PLATFORM.keys
+    option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
     def search(keyword)
       puts "searching avaiable games for #{options[:platform]} platform..."
       games = YAML.load_file(File.expand_path("~/.rom/cache/#{options[:platform]}.yml"))
@@ -99,7 +99,7 @@ module Rom
     end
 
     desc 'update', 'Update local database'
-    option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to update", enum: Rom::PLATFORM.keys
+    option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
     option :v, type: :boolean, default: false, desc: "Show verbose backtrace"
     def update
       puts "updating #{options[:platform]} platform..."
