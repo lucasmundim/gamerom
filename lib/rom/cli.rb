@@ -28,6 +28,9 @@ module Rom
     def info(game_id)
       puts "showing info for game #{game_id} on #{options[:platform]} platform..."
       game = Game.find(options[:platform], game_id)
+      if game.nil?
+        puts "Game #{game_id} not found"
+      end
       puts game
     rescue => e
       puts e.message
@@ -40,6 +43,10 @@ module Rom
       FileUtils.mkdir_p(Rom::LOG_DIR)
       puts "installing game #{game_id} on #{options[:platform]} platform..."
       game = Game.find(options[:platform], game_id)
+      if game.nil?
+        puts "Game #{game_id} not found"
+        return
+      end
       puts game
       response = RestClient::Request.execute(
         method: :get,
