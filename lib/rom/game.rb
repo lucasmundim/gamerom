@@ -17,6 +17,13 @@ module Rom
       end
     end
 
+    def installed?
+      basename = "#{Rom::GAME_DIR}/#{self.platform}/#{self.region}/#{self.name}"
+      ['zip', '7z', 'rar'].any? do |ext|
+        File.exists? "#{basename}.#{ext}"
+      end
+    end
+
     def to_s
       "#{self.id} - #{self.name} - #{self.region}"
     end

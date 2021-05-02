@@ -47,6 +47,10 @@ module Rom
         puts "Game #{game_id} not found"
         return
       end
+      if game.installed?
+        puts "Game already installed"
+        return
+      end
       puts game
       response = RestClient::Request.execute(
         method: :get,
