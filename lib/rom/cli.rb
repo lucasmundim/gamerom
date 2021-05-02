@@ -23,13 +23,12 @@ module Rom
       pp cfg
     end
 
-
     desc 'info', 'Info for a game'
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
     def info(game_id)
       puts "showing info for game #{game_id} on #{options[:platform]} platform..."
-      game = find_game(options[:platform], game_id)
-      puts "#{game[:id]} - #{game[:name]} - #{game[:region]}"
+      game = Game.find(options[:platform], game_id)
+      puts game
     rescue => e
       puts e.message
       exit 1
@@ -40,8 +39,8 @@ module Rom
     def install(game_id)
       FileUtils.mkdir_p(Rom::LOG_DIR)
       puts "installing game #{game_id} on #{options[:platform]} platform..."
-      game = find_game(options[:platform], game_id)
-      puts "#{game[:id]} - #{game[:name]} - #{game[:region]}"
+      game = Game.find(options[:platform], game_id)
+      puts game
       response = RestClient::Request.execute(
         method: :get,
         url: "https://coolrom.com.au/downloader.php?id=#{game_id}",
@@ -66,9 +65,9 @@ module Rom
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
     option :region, :aliases => ['-r'], type: :string, required: false, desc: "Only install from the specified region"
     def install_all
-      games = YAML.load_file("#{Rom::CACHE_DIR}/#{options[:platform]}.yml")
+      games = Game.all options[:platform]
       games.each do |game|
-        install(game[:id]) if options[:region].nil? || game[:region] == options[:region]
+        install(game.id) if options[:region].nil? || game.region == options[:region]
       end
     rescue => e
       puts e.message
@@ -80,9 +79,9 @@ module Rom
     option :region, :aliases => ['-r'], type: :string, required: false, desc: "Only install from the specified region"
     def list
       puts "listing avaiable games for #{options[:platform]} platform..."
-      games = YAML.load_file("#{Rom::CACHE_DIR}/#{options[:platform]}.yml")
+      games = Game.all options[:platform]
       games.each do |game|
-        puts "#{game[:id]} - #{game[:name]} - #{game[:region]}" if options[:region].nil? || game[:region] == options[:region]
+        puts game if options[:region].nil? || game.region == options[:region]
       end
     rescue => e
       puts e.message
@@ -104,8 +103,8 @@ module Rom
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
     def regions
       puts "listing avaiable regions for #{options[:platform]} platform..."
-      games = YAML.load_file("#{Rom::CACHE_DIR}/#{options[:platform]}.yml")
-      puts games.map { |game| game[:region] }.sort.uniq
+      games = Game.all options[:platform]
+      puts games.map { |game| game.region }.sort.uniq
     rescue => e
       puts e.message
       exit 1
@@ -116,9 +115,9 @@ module Rom
     option :region, :aliases => ['-r'], type: :string, required: false, desc: "Only install from the specified region"
     def search(keyword)
       puts "searching avaiable games for #{options[:platform]} platform..."
-      games = YAML.load_file("#{Rom::CACHE_DIR}/#{options[:platform]}.yml")
+      games = Game.all options[:platform]
       games.each { |game|
-        puts "#{game[:id]} - #{game[:name]} - #{game[:region]}" if game[:name] =~ /#{keyword}/i && (options[:region].nil? || game[:region] == options[:region])
+        puts game if game.name =~ /#{keyword}/i && (options[:region].nil? || game.region == options[:region])
       }
     rescue => e
       puts e.message
@@ -159,14 +158,6 @@ module Rom
     desc 'version', 'Print program version'
     def version
       puts Rom::VERSION
-    end
-
-    private
-    def find_game(platform, game_id)
-      games = YAML.load_file("#{Rom::CACHE_DIR}/#{platform}.yml")
-      games.find do |game|
-        game[:id] == game_id.to_i
-      end
     end
   end
 end
