@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'fileutils'
-require 'nokogiri'
 require 'thor'
 
 module Rom
@@ -124,27 +122,8 @@ module Rom
     option :v, type: :boolean, default: false, desc: "Show verbose backtrace"
     def update
       puts "updating #{options[:platform]} platform..."
-      games = []
-      letters = ('a'..'z').to_a.unshift("0")
-
-      letters.each do |letter|
-        print "#{letter} "
-        page = Nokogiri::HTML(RestClient.get("https://coolrom.com.au/roms/#{options[:platform]}/#{letter}/"))
-        regions = page.css('input.region').map { |i| i["name"] }
-        regions.each do |region|
-          games.append *page.css("div.#{region} a").map { |game|
-            {
-              id: game['href'].split('/')[3].to_i,
-              name: game.text,
-              region: region,
-            }
-          }
-        end
-      end
-      puts
-
-      FileUtils.mkdir_p(Rom::CACHE_DIR)
-      File.write("#{Rom::CACHE_DIR}/#{options[:platform]}.yml", games.to_yaml)
+      Game.update_database options[:platform]
+      puts 'Game database updated'
     rescue => e
       puts e.message
       exit 1

@@ -2,6 +2,7 @@
 
 require 'fileutils'
 require 'logger'
+require 'nokogiri'
 require 'ostruct'
 require 'rest-client'
 require 'yaml'
@@ -21,6 +22,30 @@ module Rom
       self.all(platform).find do |game|
         game.id == game_id.to_i
       end
+    end
+
+    def self.update_database platform
+      games = []
+      letters = ('a'..'z').to_a.unshift("0")
+
+      letters.each do |letter|
+        print "#{letter} "
+        page = Nokogiri::HTML(RestClient.get("https://coolrom.com.au/roms/#{platform}/#{letter}/"))
+        regions = page.css('input.region').map { |i| i["name"] }
+        regions.each do |region|
+          games.append *page.css("div.#{region} a").map { |game|
+            {
+              id: game['href'].split('/')[3].to_i,
+              name: game.text,
+              region: region,
+            }
+          }
+        end
+      end
+      puts
+
+      FileUtils.mkdir_p(Rom::CACHE_DIR)
+      File.write("#{Rom::CACHE_DIR}/#{platform}.yml", games.to_yaml)
     end
 
     def install
