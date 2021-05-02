@@ -2,9 +2,7 @@
 
 require 'fileutils'
 require 'nokogiri'
-require 'rest-client'
 require 'thor'
-require 'yaml'
 
 module Rom
   class Cli < Thor
@@ -40,7 +38,6 @@ module Rom
     desc 'install', 'Install game'
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
     def install(game_id)
-      FileUtils.mkdir_p(Rom::LOG_DIR)
       puts "installing game #{game_id} on #{options[:platform]} platform..."
       game = Game.find(options[:platform], game_id)
       if game.nil?
@@ -52,21 +49,8 @@ module Rom
         return
       end
       puts game
-      response = RestClient::Request.execute(
-        method: :get,
-        url: "https://coolrom.com.au/downloader.php?id=#{game_id}",
-        headers: {
-          'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36",
-        },
-        raw_response: true,
-        log: Logger.new("#{Rom::GAME_DIR}/install.log"),
-      )
-      if response.code == 200
-        filename = response.headers[:content_disposition].split('; ')[1].split('"')[1]
-        FileUtils.mkdir_p("#{Rom::GAME_DIR}/#{options[:platform]}/#{game[:region]}")
-        FileUtils.cp(response.file.path, "#{Rom::GAME_DIR}/#{options[:platform]}/#{game[:region]}/#{filename}")
-        puts "Game installed"
-      end
+      game.install
+      puts "Game installed"
     rescue => e
       puts e.message
       exit 1
