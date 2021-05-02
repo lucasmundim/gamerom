@@ -76,9 +76,9 @@ module Rom
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
     option :region, :aliases => ['-r'], type: :string, required: false, desc: "Only install from the specified region"
     def install_all
-      games = Game.all options[:platform]
+      games = Game.all options[:platform], options[:region]
       games.each do |game|
-        install(game.id) if options[:region].nil? || game.region == options[:region]
+        install(game.id)
       end
     rescue => e
       puts e.message
@@ -90,9 +90,9 @@ module Rom
     option :region, :aliases => ['-r'], type: :string, required: false, desc: "Only install from the specified region"
     def list
       puts "listing avaiable games for #{options[:platform]} platform..."
-      games = Game.all options[:platform]
+      games = Game.all options[:platform], options[:region]
       games.each do |game|
-        puts game if options[:region].nil? || game.region == options[:region]
+        puts game
       end
     rescue => e
       puts e.message
@@ -126,9 +126,9 @@ module Rom
     option :region, :aliases => ['-r'], type: :string, required: false, desc: "Only install from the specified region"
     def search(keyword)
       puts "searching avaiable games for #{options[:platform]} platform..."
-      games = Game.all options[:platform]
+      games = Game.all options[:platform], options[:region]
       games.each { |game|
-        puts game if game.name =~ /#{keyword}/i && (options[:region].nil? || game.region == options[:region])
+        puts game if game.name =~ /#{keyword}/i
       }
     rescue => e
       puts e.message

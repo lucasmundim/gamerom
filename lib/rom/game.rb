@@ -4,10 +4,12 @@ require 'ostruct'
 
 module Rom
   class Game < OpenStruct
-    def self.all platform
+    def self.all platform, region=nil
       games = YAML.load_file("#{Rom::CACHE_DIR}/#{platform}.yml")
       games.map { |game|
         self.new(game.merge(platform: platform))
+      }.select { |game|
+        region.nil? || game.region == region
       }
     end
 
