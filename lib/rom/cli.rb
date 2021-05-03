@@ -111,6 +111,25 @@ module Rom
       exit 1
     end
 
+    desc 'stats', 'Show platform stats'
+    option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
+    def stats
+      puts "stats for #{options[:platform]} platform..."
+      games = Game.all options[:platform]
+      total = games.count
+      installed = games.select { |game| game.installed? }.count
+      puts "  All: #{installed}/#{total}"
+      Game.regions(options[:platform]).each do |region|
+        games = Game.all(options[:platform], region: region)
+        total = games.count
+        installed = games.select { |game| game.installed? }.count
+        puts "  #{region}: #{installed}/#{total}"
+      end
+    rescue => e
+      shell.say e.message, :red
+      exit 1
+    end
+
     desc 'uninstall GAME_IDENTIFIER', 'Uninstall game GAME_IDENTIFIER (id/name)'
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
     def uninstall(game_identifier)
