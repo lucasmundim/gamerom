@@ -10,7 +10,9 @@ require 'yaml'
 module Rom
   class Game < OpenStruct
     def self.all platform, options={}
-      games = YAML.load_file("#{Rom::CACHE_DIR}/#{platform}.yml").map { |game|
+      platform_database = "#{Rom::CACHE_DIR}/#{platform}.yml"
+      update_database platform unless File.exists? platform_database
+      games = YAML.load_file(platform_database).map { |game|
         self.new(game.merge(platform: platform))
       }
 
