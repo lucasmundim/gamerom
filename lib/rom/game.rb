@@ -36,7 +36,7 @@ module Rom
         if Float(game_identifier, exception: false)
           game.id == game_identifier.to_i
         else
-          game.name == game_identifier
+          game.name.downcase == game_identifier.downcase
         end
 
       end
