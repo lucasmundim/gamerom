@@ -21,11 +21,11 @@ module Rom
 
     desc 'info', 'Info for a game'
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
-    def info(game_id)
-      puts "showing info for game #{game_id} on #{options[:platform]} platform..."
-      game = Game.find(options[:platform], game_id)
+    def info(game_identifier)
+      puts "showing info for game #{game_identifier} on #{options[:platform]} platform..."
+      game = Game.find(options[:platform], game_identifier)
       if game.nil?
-        puts "Game #{game_id} not found"
+        puts "Game #{game_identifier} not found"
       end
       puts game
     rescue => e
@@ -35,11 +35,11 @@ module Rom
 
     desc 'install', 'Install game'
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
-    def install(game_id)
-      puts "installing game #{game_id} on #{options[:platform]} platform..."
-      game = Game.find(options[:platform], game_id)
+    def install(game_identifier)
+      puts "installing game #{game_identifier} on #{options[:platform]} platform..."
+      game = Game.find(options[:platform], game_identifier)
       if game.nil?
-        puts "Game #{game_id} not found"
+        puts "Game #{game_identifier} not found"
         return
       end
       if game.installed?

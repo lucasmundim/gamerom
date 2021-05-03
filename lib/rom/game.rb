@@ -29,12 +29,12 @@ module Rom
       games
     end
 
-    def self.find platform, game_id
+    def self.find platform, game_identifier
       self.all(platform).find do |game|
-        if Float(game_id, exception: false)
-          game.id == game_id.to_i
+        if Float(game_identifier, exception: false)
+          game.id == game_identifier.to_i
         else
-          game.name == game_id
+          game.name == game_identifier
         end
 
       end
