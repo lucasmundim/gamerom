@@ -19,7 +19,7 @@ module Rom
       pp cfg
     end
 
-    desc 'info', 'Info for a game'
+    desc 'info GAME_IDENTIFIER', 'Info for game GAME_IDENTIFIER (id/name)'
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
     def info(game_identifier)
       puts "showing info for game #{game_identifier} on #{options[:platform]} platform..."
@@ -33,7 +33,7 @@ module Rom
       exit 1
     end
 
-    desc 'install', 'Install game'
+    desc 'install GAME_IDENTIFIER', 'Install game GAME_IDENTIFIER (id/name)'
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
     def install(game_identifier)
       puts "installing game #{game_identifier} on #{options[:platform]} platform..."
@@ -56,7 +56,7 @@ module Rom
 
     desc 'install_all', 'Install all games'
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
-    option :region, :aliases => ['-r'], type: :string, required: false, desc: "Only install from the specified region"
+    option :region, :aliases => ['-r'], type: :string, required: false, desc: "Only from specified region"
     def install_all
       games = Game.all options[:platform], region: options[:region]
       games.each do |game|
@@ -69,7 +69,7 @@ module Rom
 
     desc 'list', 'List games'
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
-    option :region, :aliases => ['-r'], type: :string, required: false, desc: "Only install from the specified region"
+    option :region, :aliases => ['-r'], type: :string, required: false, desc: "Only from specified region"
     def list
       puts "listing avaiable games for #{options[:platform]} platform..."
       games = Game.all options[:platform], region: options[:region]
@@ -81,7 +81,7 @@ module Rom
       exit 1
     end
 
-    desc 'platform', 'List avaiable platform'
+    desc 'platform', 'List avaiable platforms'
     def platform
       puts "listing avaiable platforms..."
       platforms = { platforms: Rom::PLATFORM }
@@ -102,9 +102,9 @@ module Rom
       exit 1
     end
 
-    desc 'search', 'Search games'
+    desc 'search KEYWORD', 'Search games by KEYWORD'
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
-    option :region, :aliases => ['-r'], type: :string, required: false, desc: "Only install from the specified region"
+    option :region, :aliases => ['-r'], type: :string, required: false, desc: "Only from specified region"
     def search(keyword)
       puts "searching avaiable games for #{options[:platform]} platform..."
       games = Game.all options[:platform], region: options[:region], keyword: keyword
