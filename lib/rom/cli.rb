@@ -132,6 +132,19 @@ module Rom
       exit 1
     end
 
+    desc 'update_all_databases', 'Update all local databases'
+    def update_all_databases
+      Rom::PLATFORM.keys.each do |platform|
+        puts "updating #{platform} platform..."
+        Game.update_database platform
+        shell.say "Game database updated for platform #{platform}", :green
+      end
+      shell.say 'All game databases updated', :green
+    rescue => e
+      shell.say e.message, :red
+      exit 1
+    end
+
     desc 'update_database', 'Update local database'
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
     def update_database
