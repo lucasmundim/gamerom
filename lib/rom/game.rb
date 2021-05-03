@@ -66,6 +66,14 @@ module Rom
       File.write("#{Rom::CACHE_DIR}/#{platform}.yml", games.to_yaml)
     end
 
+    def filename
+      basename = "#{Rom::GAME_DIR}/#{self.platform}/#{self.region}/#{self.name}"
+      ext = ['zip', '7z', 'rar'].find do |ext|
+        File.exists? "#{basename}.#{ext}"
+      end
+      "#{basename}.#{ext}"
+    end
+
     def install
       FileUtils.mkdir_p(Rom::LOG_DIR)
       response = RestClient::Request.execute(

@@ -28,6 +28,7 @@ module Rom
         shell.say "Game #{game_identifier} not found", :red
       end
       puts game
+      puts game.filename if game.installed?
     rescue => e
       shell.say e.message, :red
       exit 1
