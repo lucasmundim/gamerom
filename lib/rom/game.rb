@@ -31,7 +31,12 @@ module Rom
 
     def self.find platform, game_id
       self.all(platform).find do |game|
-        game.id == game_id.to_i
+        if Float(game_id, exception: false)
+          game.id == game_id.to_i
+        else
+          game.name == game_id
+        end
+
       end
     end
 
