@@ -112,6 +112,26 @@ module Rom
       exit 1
     end
 
+    desc 'uninstall GAME_IDENTIFIER', 'Uninstall game GAME_IDENTIFIER (id/name)'
+    option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
+    def uninstall(game_identifier)
+      game = Game.find(options[:platform], game_identifier)
+      if game.nil?
+        shell.say "Game #{game_identifier} not found", :red
+        return
+      end
+      puts "uninstalling game #{game.id} - #{game.name} - #{game.region} on #{options[:platform]} platform..."
+      if !game.installed?
+        shell.say "Game is not installed", :yellow
+        return
+      end
+      game.uninstall
+      shell.say "Game uninstalled", :green
+    rescue => e
+      shell.say e.message, :red
+      exit 1
+    end
+
     desc 'update_database', 'Update local database'
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
     def update_database

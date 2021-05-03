@@ -103,6 +103,10 @@ module Rom
       "#{self.id} - #{self.name} - #{self.region}#{self.installed? ? " (#{shell.set_color 'installed', :green})" : ''}"
     end
 
+    def uninstall
+      FileUtils.rm_rf self.filename
+    end
+
     private
     def shell
       @shell ||= Thor::Shell::Color.new
