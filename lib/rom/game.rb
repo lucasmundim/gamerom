@@ -92,7 +92,12 @@ module Rom
     end
 
     def to_s
-      "#{self.id} - #{self.name} - #{self.region}#{self.installed? ? ' (installed)' : ''}"
+      "#{self.id} - #{self.name} - #{self.region}#{self.installed? ? " (#{shell.set_color 'installed', :green})" : ''}"
+    end
+
+    private
+    def shell
+      @shell ||= Thor::Shell::Color.new
     end
   end
 end

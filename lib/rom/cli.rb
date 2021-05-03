@@ -25,11 +25,11 @@ module Rom
       puts "showing info for game #{game_identifier} on #{options[:platform]} platform..."
       game = Game.find(options[:platform], game_identifier)
       if game.nil?
-        puts "Game #{game_identifier} not found"
+        shell.say "Game #{game_identifier} not found", :red
       end
       puts game
     rescue => e
-      puts e.message
+      shell.say e.message, :red
       exit 1
     end
 
@@ -39,18 +39,18 @@ module Rom
       puts "installing game #{game_identifier} on #{options[:platform]} platform..."
       game = Game.find(options[:platform], game_identifier)
       if game.nil?
-        puts "Game #{game_identifier} not found"
+        shell.say "Game #{game_identifier} not found", :red
         return
       end
       if game.installed?
-        puts "Game already installed"
+        shell.say "Game already installed", :yellow
         return
       end
       puts game
       game.install
-      puts "Game installed"
+      shell.say "Game installed", :green
     rescue => e
-      puts e.message
+      shell.say e.message, :red
       exit 1
     end
 
@@ -63,7 +63,7 @@ module Rom
         install(game.id)
       end
     rescue => e
-      puts e.message
+      shell.say e.message, :red
       exit 1
     end
 
@@ -77,7 +77,7 @@ module Rom
         puts game
       end
     rescue => e
-      puts e.message
+      shell.say e.message, :red
       exit 1
     end
 
@@ -87,7 +87,7 @@ module Rom
       platforms = { platforms: Rom::PLATFORM }
       puts platforms.to_yaml
     rescue => e
-      puts e.message
+      shell.say e.message, :red
       exit 1
     end
 
@@ -98,7 +98,7 @@ module Rom
       games = Game.all options[:platform]
       puts games.map { |game| game.region }.sort.uniq
     rescue => e
-      puts e.message
+      shell.say e.message, :red
       exit 1
     end
 
@@ -112,7 +112,7 @@ module Rom
         puts game
       }
     rescue => e
-      puts e.message
+      shell.say e.message, :red
       exit 1
     end
 
@@ -121,9 +121,9 @@ module Rom
     def update_database
       puts "updating #{options[:platform]} platform..."
       Game.update_database options[:platform]
-      puts 'Game database updated'
+      shell.say 'Game database updated', :green
     rescue => e
-      puts e.message
+      shell.say e.message, :red
       exit 1
     end
 
