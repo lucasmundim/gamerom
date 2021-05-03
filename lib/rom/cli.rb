@@ -73,9 +73,7 @@ module Rom
     def list
       puts "listing available games for #{options[:platform]} platform..."
       games = Game.all options[:platform], region: options[:region]
-      games.each do |game|
-        puts game
-      end
+      print_game_table(games)
     rescue => e
       shell.say e.message, :red
       exit 1
@@ -108,9 +106,7 @@ module Rom
     def search(keyword)
       puts "searching available games for #{options[:platform]} platform..."
       games = Game.all options[:platform], region: options[:region], keyword: keyword
-      games.each { |game|
-        puts game
-      }
+      print_game_table(games)
     rescue => e
       shell.say e.message, :red
       exit 1
@@ -130,6 +126,21 @@ module Rom
     desc 'version', 'Print program version'
     def version
       puts Rom::VERSION
+    end
+
+    private
+    def print_game_table(games)
+      results = []
+      results << ['ID', 'NAME', 'REGION', 'INSTALLED']
+      games.each do |game|
+        results << [
+          game.id,
+          game.name,
+          game.region,
+          game.installed? ? shell.set_color('installed', :green) : '-',
+        ]
+      end
+      shell.print_table(results)
     end
   end
 end
