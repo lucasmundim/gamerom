@@ -153,9 +153,9 @@ module Rom
     desc 'update_all_databases', 'Update all local databases'
     def update_all_databases
       Rom::PLATFORM.keys.each do |platform|
-        puts "updating #{platform} platform..."
-        Game.update_database platform
-        shell.say "Game database updated for platform #{platform}", :green
+        a = Rom::Cli.new
+        a.options = { platform: platform }
+        a.update_database
       end
       shell.say 'All game databases updated', :green
     rescue => e
@@ -168,7 +168,7 @@ module Rom
     def update_database
       puts "updating #{options[:platform]} platform..."
       Game.update_database options[:platform]
-      shell.say 'Game database updated', :green
+      shell.say "Game database updated for platform #{options[:platform]}", :green
     rescue => e
       shell.say e.message, :red
       exit 1
