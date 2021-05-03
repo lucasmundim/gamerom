@@ -130,6 +130,18 @@ module Rom
       exit 1
     end
 
+    desc 'stats_all', 'Show stats for all platforms'
+    def stats_all
+      Rom::PLATFORM.keys.each do |platform|
+        a = Rom::Cli.new
+        a.options = { platform: platform }
+        a.stats
+      end
+    rescue => e
+      shell.say e.message, :red
+      exit 1
+    end
+
     desc 'uninstall GAME_IDENTIFIER', 'Uninstall game GAME_IDENTIFIER (id/name)'
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
     def uninstall(game_identifier)
