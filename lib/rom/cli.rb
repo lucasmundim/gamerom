@@ -118,13 +118,22 @@ module Rom
       games = Game.all options[:platform]
       total = games.count
       installed = games.select { |game| game.installed? }.count
-      puts "  All: #{installed}/#{total}"
+      size = 0
+      if File.exists? "#{Rom::GAME_DIR}/#{options[:platform]}"
+        size = `du -hs "#{Rom::GAME_DIR}/#{options[:platform]}/"|awk '{ print $1 }'`
+      end
+      puts "  All: #{installed}/#{total} - size: #{size}"
       Game.regions(options[:platform]).each do |region|
         games = Game.all(options[:platform], region: region)
         total = games.count
         installed = games.select { |game| game.installed? }.count
-        puts "  #{region}: #{installed}/#{total}"
+        size = 0
+        if File.exists? "#{Rom::GAME_DIR}/#{options[:platform]}/#{region}"
+          size = `du -hs "#{Rom::GAME_DIR}/#{options[:platform]}/#{region}/"|awk '{ print $1 }'`
+        end
+        puts "  #{region}: #{installed}/#{total} - size: #{size}"
       end
+      puts
     rescue => e
       shell.say e.message, :red
       exit 1
