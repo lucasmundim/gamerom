@@ -36,17 +36,16 @@ module Rom
     desc 'install GAME_IDENTIFIER', 'Install game GAME_IDENTIFIER (id/name)'
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
     def install(game_identifier)
-      puts "installing game #{game_identifier} on #{options[:platform]} platform..."
       game = Game.find(options[:platform], game_identifier)
       if game.nil?
         shell.say "Game #{game_identifier} not found", :red
         return
       end
+      puts "installing game #{game.id} - #{game.name} - #{game.region} on #{options[:platform]} platform..."
       if game.installed?
         shell.say "Game already installed", :yellow
         return
       end
-      puts game
       game.install
       shell.say "Game installed", :green
     rescue => e
