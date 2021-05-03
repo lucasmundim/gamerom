@@ -9,13 +9,24 @@ require 'yaml'
 
 module Rom
   class Game < OpenStruct
-    def self.all platform, region=nil
-      games = YAML.load_file("#{Rom::CACHE_DIR}/#{platform}.yml")
-      games.map { |game|
+    def self.all platform, options={}
+      games = YAML.load_file("#{Rom::CACHE_DIR}/#{platform}.yml").map { |game|
         self.new(game.merge(platform: platform))
-      }.select { |game|
-        region.nil? || game.region == region
       }
+
+      if !options[:region].nil?
+        games = games.select { |game|
+          options[:region].nil? || game.region == options[:region]
+        }
+      end
+
+      if !options[:keyword].nil?
+        games = games.select { |game|
+          game.name =~ /#{options[:keyword]}/i
+        }
+      end
+
+      games
     end
 
     def self.find platform, game_id
