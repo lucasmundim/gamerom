@@ -130,7 +130,7 @@ module Rom
     private
     def print_game_table(games)
       results = []
-      results << ['ID', 'NAME', 'REGION', 'INSTALLED']
+
       games.each do |game|
         results << [
           game.id,
@@ -139,6 +139,8 @@ module Rom
           game.installed? ? shell.set_color('installed', :green) : '-',
         ]
       end
+      results.sort_by! { |columns| columns[1] }
+      results.unshift ['ID', 'NAME', 'REGION', 'INSTALLED']
       shell.print_table(results)
     end
   end
