@@ -90,7 +90,7 @@ module Rom
     end
 
     def to_s
-      "#{self.id} - #{self.name} - #{self.region}"
+      "#{self.id} - #{self.name} - #{self.region}#{self.installed? ? ' (installed)' : ''}"
     end
   end
 end
