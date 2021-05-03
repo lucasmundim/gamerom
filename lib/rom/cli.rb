@@ -82,7 +82,6 @@ module Rom
     end
 
     desc 'platform', 'List avaiable platform'
-    option :v, type: :boolean, default: false, desc: "Show verbose backtrace"
     def platform
       puts "listing avaiable platforms..."
       platforms = { platforms: Rom::PLATFORM }
@@ -119,7 +118,6 @@ module Rom
 
     desc 'update', 'Update local database'
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
-    option :v, type: :boolean, default: false, desc: "Show verbose backtrace"
     def update
       puts "updating #{options[:platform]} platform..."
       Game.update_database options[:platform]
