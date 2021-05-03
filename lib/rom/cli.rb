@@ -116,9 +116,9 @@ module Rom
       exit 1
     end
 
-    desc 'update', 'Update local database'
+    desc 'update_database', 'Update local database'
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
-    def update
+    def update_database
       puts "updating #{options[:platform]} platform..."
       Game.update_database options[:platform]
       puts 'Game database updated'
