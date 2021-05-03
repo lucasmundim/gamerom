@@ -42,6 +42,10 @@ module Rom
       end
     end
 
+    def self.regions platform
+      self.all(platform).map { |game| game.region }.sort.uniq
+    end
+
     def self.update_database platform
       games = []
       letters = ('a'..'z').to_a.unshift("0")

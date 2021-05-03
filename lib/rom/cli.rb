@@ -93,8 +93,7 @@ module Rom
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
     def regions
       puts "listing available regions for #{options[:platform]} platform..."
-      games = Game.all options[:platform]
-      puts games.map { |game| game.region }.sort.uniq
+      puts Game.regions options[:platform]
     rescue => e
       shell.say e.message, :red
       exit 1
