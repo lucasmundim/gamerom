@@ -71,7 +71,7 @@ module Rom
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
     option :region, :aliases => ['-r'], type: :string, required: false, desc: "Only from specified region"
     def list
-      puts "listing avaiable games for #{options[:platform]} platform..."
+      puts "listing available games for #{options[:platform]} platform..."
       games = Game.all options[:platform], region: options[:region]
       games.each do |game|
         puts game
@@ -81,9 +81,9 @@ module Rom
       exit 1
     end
 
-    desc 'platform', 'List avaiable platforms'
+    desc 'platform', 'List available platforms'
     def platform
-      puts "listing avaiable platforms..."
+      puts "listing available platforms..."
       platforms = { platforms: Rom::PLATFORM }
       puts platforms.to_yaml
     rescue => e
@@ -91,10 +91,10 @@ module Rom
       exit 1
     end
 
-    desc 'regions', 'List avaiable regions'
+    desc 'regions', 'List available regions'
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
     def regions
-      puts "listing avaiable regions for #{options[:platform]} platform..."
+      puts "listing available regions for #{options[:platform]} platform..."
       games = Game.all options[:platform]
       puts games.map { |game| game.region }.sort.uniq
     rescue => e
@@ -106,7 +106,7 @@ module Rom
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
     option :region, :aliases => ['-r'], type: :string, required: false, desc: "Only from specified region"
     def search(keyword)
-      puts "searching avaiable games for #{options[:platform]} platform..."
+      puts "searching available games for #{options[:platform]} platform..."
       games = Game.all options[:platform], region: options[:region], keyword: keyword
       games.each { |game|
         puts game
