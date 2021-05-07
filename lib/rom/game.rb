@@ -1,95 +1,22 @@
 # 'frozen_string_literal' => true
 
 require 'fileutils'
-require 'nokogiri'
 require 'ostruct'
-require 'rest-client'
-require 'yaml'
 
 module Rom
   class Game < OpenStruct
-    def self.all platform, options={}
-      platform_database = "#{Rom::CACHE_DIR}/#{platform}.yml"
-      update_database platform unless File.exists? platform_database
-      games = YAML.load_file(platform_database).map { |game|
-        self.new(game.merge(platform: platform))
-      }
-
-      if !options[:region].nil?
-        games = games.select { |game|
-          options[:region].nil? || game.region == options[:region]
-        }
-      end
-
-      if !options[:keyword].nil?
-        games = games.select { |game|
-          game.name =~ /#{options[:keyword]}/i
-        }
-      end
-
-      games
-    end
-
-    def self.find platform, game_identifier
-      self.all(platform).find do |game|
-        if Float(game_identifier, exception: false)
-          game.id == game_identifier.to_i
-        else
-          game.name.downcase == game_identifier.downcase
-        end
-
-      end
-    end
-
-    def self.regions platform
-      self.all(platform).map { |game| game.region }.sort.uniq
-    end
-
-    def self.update_database platform
-      games = []
-      letters = ('a'..'z').to_a.unshift("0")
-
-      letters.each do |letter|
-        print "#{letter} "
-        page = Nokogiri::HTML(RestClient.get("https://coolrom.com.au/roms/#{platform}/#{letter}/"))
-        regions = page.css('input.region').map { |i| i["name"] }
-        regions.each do |region|
-          games.append *page.css("div.#{region} a").map { |game|
-            {
-              id: game['href'].split('/')[3].to_i,
-              name: game.text,
-              region: region,
-            }
-          }
-        end
-      end
-      puts
-
-      FileUtils.mkdir_p(Rom::CACHE_DIR)
-      File.write("#{Rom::CACHE_DIR}/#{platform}.yml", games.to_yaml)
-    end
-
     def filename
       "#{self.filepath}/#{File.read(self.state_filename)}"
     end
 
     def filepath
-      "#{Rom::GAME_DIR}/#{self.platform}/#{self.region}"
+      "#{Rom::GAME_DIR}/#{self.repo.name}/#{self.platform}/#{self.region}"
     end
 
     def install
-      response = RestClient::Request.execute(
-        method: :get,
-        url: "https://coolrom.com.au/downloader.php?id=#{self.id}",
-        headers: {
-          'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36",
-        },
-        raw_response: true,
-      )
-      if response.code == 200
-        filename = response.headers[:content_disposition].split('; ')[1].split('"')[1]
+      self.repo.install self do |file, filename|
         FileUtils.mkdir_p(self.filepath)
-        FileUtils.cp(response.file.path, "#{self.filepath}/#{filename}")
+        FileUtils.cp(file, "#{self.filepath}/#{filename}")
         self.update_state filename
       end
     end
@@ -99,7 +26,7 @@ module Rom
     end
 
     def state_filename
-      "#{Rom::STATE_DIR}/#{self.platform}/#{self.region}/#{self.id}"
+      "#{Rom::STATE_DIR}/#{self.repo.name}/#{self.platform}/#{self.region}/#{self.id}"
     end
 
     def to_s
@@ -112,7 +39,7 @@ module Rom
     end
 
     def update_state filename
-      FileUtils.mkdir_p("#{Rom::STATE_DIR}/#{self.platform}/#{self.region}")
+      FileUtils.mkdir_p("#{Rom::STATE_DIR}/#{self.repo.name}/#{self.platform}/#{self.region}")
       File.write(self.state_filename, filename)
     end
 
