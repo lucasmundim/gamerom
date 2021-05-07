@@ -89,6 +89,37 @@ module Rom
       exit 1
     end
 
+    desc 'recover', 'Try to recover state from already downloaded roms'
+    option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
+    def recover
+      puts "recovering state of roms for #{options[:platform]} platform..."
+      games = Game.all options[:platform]
+      games_not_found = []
+      games.each do |game|
+        filename = nil
+        basename = "#{Rom::GAME_DIR}/#{options[:platform]}/#{game[:region]}/#{game[:name]}"
+        ['zip', '7z', 'rar'].each do |ext|
+          if File.exists? "#{basename}.#{ext}"
+            filename = "#{basename}.#{ext}"
+          end
+        end
+
+        if filename
+          game.update_state File.basename(filename)
+          puts "Found game #{game[:name]}"
+        else
+          games_not_found << game[:name]
+        end
+      end
+      if games_not_found.count > 0
+        puts "Games not found:"
+        puts games_not_found
+      end
+    rescue => e
+      puts e.message
+      exit 1
+    end
+
     desc 'regions', 'List available regions'
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use", enum: Rom::PLATFORM.keys
     def regions
