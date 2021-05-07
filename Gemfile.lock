@@ -22,6 +22,8 @@ GEM
     netrc (0.11.0)
     nokogiri (1.11.3-x86_64-darwin)
       racc (~> 1.4)
+    nokogiri (1.11.3-x86_64-linux)
+      racc (~> 1.4)
     parallel (1.20.1)
     parser (3.0.1.0)
       ast (~> 2.4.1)
@@ -68,6 +70,7 @@ GEM
 
 PLATFORMS
   x86_64-darwin-20
+  x86_64-linux-musl
 
 DEPENDENCIES
   rake (~> 13.0)
