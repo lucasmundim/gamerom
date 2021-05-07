@@ -70,11 +70,11 @@ module Rom
     end
 
     def filename
-      basename = "#{Rom::GAME_DIR}/#{self.platform}/#{self.region}/#{self.name}"
-      ext = ['zip', '7z', 'rar'].find do |ext|
-        File.exists? "#{basename}.#{ext}"
-      end
-      "#{basename}.#{ext}"
+      "#{self.filepath}/#{File.read(self.state_filename)}"
+    end
+
+    def filepath
+      "#{Rom::GAME_DIR}/#{self.platform}/#{self.region}"
     end
 
     def install
@@ -88,16 +88,18 @@ module Rom
       )
       if response.code == 200
         filename = response.headers[:content_disposition].split('; ')[1].split('"')[1]
-        FileUtils.mkdir_p("#{Rom::GAME_DIR}/#{self.platform}/#{self.region}")
-        FileUtils.cp(response.file.path, "#{Rom::GAME_DIR}/#{self.platform}/#{self.region}/#{filename}")
+        FileUtils.mkdir_p(self.filepath)
+        FileUtils.cp(response.file.path, "#{self.filepath}/#{filename}")
+        self.update_state filename
       end
     end
 
     def installed?
-      basename = "#{Rom::GAME_DIR}/#{self.platform}/#{self.region}/#{self.name}"
-      ['zip', '7z', 'rar'].any? do |ext|
-        File.exists? "#{basename}.#{ext}"
-      end
+      File.exists? self.state_filename
+    end
+
+    def state_filename
+      "#{Rom::STATE_DIR}/#{self.platform}/#{self.region}/#{self.id}"
     end
 
     def to_s
@@ -106,6 +108,12 @@ module Rom
 
     def uninstall
       FileUtils.rm_rf self.filename
+      FileUtils.rm_rf self.state_filename
+    end
+
+    def update_state filename
+      FileUtils.mkdir_p("#{Rom::STATE_DIR}/#{self.platform}/#{self.region}")
+      File.write(self.state_filename, filename)
     end
 
     private

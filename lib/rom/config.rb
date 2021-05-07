@@ -9,6 +9,7 @@ module Rom
   CACHE_DIR = ENV['CACHE_DIR'] || "#{ROM_ROOT}/cache"
   GAME_DIR = ENV['GAME_DIR'] || "#{ROM_ROOT}/games"
   LOG_DIR = ENV['LOG_DIR'] || "#{ROM_ROOT}/logs"
+  STATE_DIR = ENV['STATE_DIR'] || "#{ROM_ROOT}/state"
 end
 
 FileUtils.mkdir_p(Rom::LOG_DIR)
