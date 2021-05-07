@@ -60,7 +60,7 @@ module Rom
     def install_all
       games = Game.all options[:platform], region: options[:region]
       games.each do |game|
-        install(game.id)
+        install(game.id) unless game.installed?
       end
     rescue => e
       shell.say e.message, :red
