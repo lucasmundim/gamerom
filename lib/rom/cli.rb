@@ -78,7 +78,7 @@ module Rom
       exit 1
     end
 
-    desc 'list', 'List games'
+    desc 'list', 'List available games'
     option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Rom::Repo.list.map(&:to_s)
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use"
     option :region, :aliases => ['-g'], type: :string, required: false, desc: "Only from specified region"
