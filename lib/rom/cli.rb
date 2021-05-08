@@ -93,9 +93,9 @@ module Rom
       exit 1
     end
 
-    desc 'platform', 'List available platforms'
+    desc 'platforms', 'List available platforms'
     option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Rom::Repo.list.map(&:to_s)
-    def platform
+    def platforms
       puts "listing available platforms for #{options[:repo]} repo..."
       platforms = { platforms: Repo.new(options[:repo]).platforms }
       puts platforms.to_yaml
