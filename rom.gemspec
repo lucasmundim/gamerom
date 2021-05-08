@@ -6,15 +6,15 @@ Gem::Specification.new do |spec|
   spec.name          = "rom"
   spec.version       = Rom::VERSION
   spec.authors       = ["Lucas Mundim"]
-  spec.email         = ["lucas.mundim@g.globo"]
+  spec.email         = ["lucas.mundim@gmail.com"]
 
   spec.summary       = "The Video Game ROM downloader"
-  spec.description   = "A cli to download rom for many video game consoles"
+  spec.description   = "A command-line installer for game ROMs from many repositories."
   spec.homepage      = "https://github.com/lucasmundim/rom"
   spec.license       = "MIT"
-  spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
+  spec.required_ruby_version = Gem::Requirement.new(">= 3.0.0")
 
-  spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
+  spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = spec.homepage
