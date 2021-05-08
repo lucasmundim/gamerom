@@ -54,6 +54,7 @@ module Rom
             }
           end
         end
+        games
       end
 
       def self.install(game)
