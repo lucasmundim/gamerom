@@ -2,7 +2,7 @@
 
 require 'thor'
 
-module Rom
+module Gamerom
   class Cli < Thor
     class_option :verbose, :aliases => ['-v'], :type => :boolean, default: false, desc: "Show verbose backtrace"
 
@@ -13,16 +13,16 @@ module Rom
     desc 'config', 'Show config'
     def config
       cfg = {
-        ROM_ROOT: Rom::ROM_ROOT,
-        CACHE_DIR: Rom::CACHE_DIR,
-        GAME_DIR: Rom::GAME_DIR,
-        LOG_DIR: Rom::LOG_DIR,
+        ROM_ROOT: Gamerom::ROM_ROOT,
+        CACHE_DIR: Gamerom::CACHE_DIR,
+        GAME_DIR: Gamerom::GAME_DIR,
+        LOG_DIR: Gamerom::LOG_DIR,
       }
       pp cfg
     end
 
     desc 'info GAME_IDENTIFIER', 'Info for game GAME_IDENTIFIER (id/name)'
-    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Rom::Repo.list.map(&:to_s)
+    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Gamerom::Repo.list.map(&:to_s)
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use"
     def info(game_identifier)
       repo = Repo.new(options[:repo])
@@ -40,7 +40,7 @@ module Rom
     end
 
     desc 'install GAME_IDENTIFIER', 'Install game GAME_IDENTIFIER (id/name)'
-    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Rom::Repo.list.map(&:to_s)
+    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Gamerom::Repo.list.map(&:to_s)
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use"
     def install(game_identifier)
       repo = Repo.new(options[:repo])
@@ -63,7 +63,7 @@ module Rom
     end
 
     desc 'install_all', 'Install all games'
-    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Rom::Repo.list.map(&:to_s)
+    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Gamerom::Repo.list.map(&:to_s)
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use"
     option :region, :aliases => ['-g'], type: :string, required: false, desc: "Only from specified region"
     def install_all
@@ -79,7 +79,7 @@ module Rom
     end
 
     desc 'list', 'List available games'
-    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Rom::Repo.list.map(&:to_s)
+    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Gamerom::Repo.list.map(&:to_s)
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use"
     option :region, :aliases => ['-g'], type: :string, required: false, desc: "Only from specified region"
     def list
@@ -94,7 +94,7 @@ module Rom
     end
 
     desc 'platforms', 'List available platforms'
-    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Rom::Repo.list.map(&:to_s)
+    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Gamerom::Repo.list.map(&:to_s)
     def platforms
       puts "listing available platforms for #{options[:repo]} repo..."
       platforms = { platforms: Repo.new(options[:repo]).platforms }
@@ -105,7 +105,7 @@ module Rom
     end
 
     desc 'recover', 'Try to recover state from already downloaded roms'
-    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Rom::Repo.list.map(&:to_s)
+    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Gamerom::Repo.list.map(&:to_s)
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use"
     def recover
       repo = Repo.new(options[:repo])
@@ -115,7 +115,7 @@ module Rom
       games_not_found = []
       games.each do |game|
         filename = nil
-        basename = "#{Rom::GAME_DIR}/#{repo.name}/#{options[:platform]}/#{game[:region]}/#{game[:name]}"
+        basename = "#{Gamerom::GAME_DIR}/#{repo.name}/#{options[:platform]}/#{game[:region]}/#{game[:name]}"
         ['zip', '7z', 'rar'].each do |ext|
           if File.exists? "#{basename}.#{ext}"
             filename = "#{basename}.#{ext}"
@@ -139,7 +139,7 @@ module Rom
     end
 
     desc 'regions', 'List available regions'
-    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Rom::Repo.list.map(&:to_s)
+    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Gamerom::Repo.list.map(&:to_s)
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use"
     def regions
       repo = Repo.new(options[:repo])
@@ -161,7 +161,7 @@ module Rom
     end
 
     desc 'search KEYWORD', 'Search games by KEYWORD'
-    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Rom::Repo.list.map(&:to_s)
+    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Gamerom::Repo.list.map(&:to_s)
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use"
     option :region, :aliases => ['-g'], type: :string, required: false, desc: "Only from specified region"
     def search(keyword)
@@ -176,7 +176,7 @@ module Rom
     end
 
     desc 'stats', 'Show platform stats'
-    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Rom::Repo.list.map(&:to_s)
+    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Gamerom::Repo.list.map(&:to_s)
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use"
     def stats
       repo = Repo.new(options[:repo])
@@ -186,8 +186,8 @@ module Rom
       total = games.count
       installed = games.select { |game| game.installed? }.count
       size = 0
-      if File.exists? "#{Rom::GAME_DIR}/#{repo.name}/#{options[:platform]}"
-        size = `du -hs "#{Rom::GAME_DIR}/#{repo.name}/#{options[:platform]}/"|awk '{ print $1 }'`
+      if File.exists? "#{Gamerom::GAME_DIR}/#{repo.name}/#{options[:platform]}"
+        size = `du -hs "#{Gamerom::GAME_DIR}/#{repo.name}/#{options[:platform]}/"|awk '{ print $1 }'`
       end
       puts "  All: #{installed}/#{total} - size: #{size}"
       repo.regions(options[:platform]).each do |region|
@@ -195,8 +195,8 @@ module Rom
         total = games.count
         installed = games.select { |game| game.installed? }.count
         size = 0
-        if File.exists? "#{Rom::GAME_DIR}/#{repo.name}/#{options[:platform]}/#{region}"
-          size = `du -hs "#{Rom::GAME_DIR}/#{repo.name}/#{options[:platform]}/#{region}/"|awk '{ print $1 }'`
+        if File.exists? "#{Gamerom::GAME_DIR}/#{repo.name}/#{options[:platform]}/#{region}"
+          size = `du -hs "#{Gamerom::GAME_DIR}/#{repo.name}/#{options[:platform]}/#{region}/"|awk '{ print $1 }'`
         end
         puts "  #{region}: #{installed}/#{total} - size: #{size}"
       end
@@ -207,11 +207,11 @@ module Rom
     end
 
     desc 'stats_all', 'Show stats for all platforms'
-    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Rom::Repo.list.map(&:to_s)
+    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Gamerom::Repo.list.map(&:to_s)
     def stats_all
       repo = Repo.new(options[:repo])
       repo.platforms.keys.each do |platform|
-        a = Rom::Cli.new
+        a = Gamerom::Cli.new
         a.options = { platform: platform, repo: options[:repo] }
         a.stats
       end
@@ -221,7 +221,7 @@ module Rom
     end
 
     desc 'uninstall GAME_IDENTIFIER', 'Uninstall game GAME_IDENTIFIER (id/name)'
-    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Rom::Repo.list.map(&:to_s)
+    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Gamerom::Repo.list.map(&:to_s)
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use"
     def uninstall(game_identifier)
       repo = Repo.new(options[:repo])
@@ -244,7 +244,7 @@ module Rom
     end
 
     desc 'uninstall_all', 'Uninstall all games'
-    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Rom::Repo.list.map(&:to_s)
+    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Gamerom::Repo.list.map(&:to_s)
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use"
     option :region, :aliases => ['-g'], type: :string, required: false, desc: "Only from specified region"
     def uninstall_all
@@ -260,11 +260,11 @@ module Rom
     end
 
     desc 'update_all_databases', 'Update all local databases'
-    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Rom::Repo.list.map(&:to_s)
+    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Gamerom::Repo.list.map(&:to_s)
     def update_all_databases
       repo = Repo.new(options[:repo])
       repo.platforms.keys.each do |platform|
-        a = Rom::Cli.new
+        a = Gamerom::Cli.new
         a.options = { platform: platform, repo: options[:repo] }
         a.update_database
       end
@@ -275,7 +275,7 @@ module Rom
     end
 
     desc 'update_database', 'Update local database'
-    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Rom::Repo.list.map(&:to_s)
+    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Gamerom::Repo.list.map(&:to_s)
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use"
     def update_database
       repo = Repo.new(options[:repo])
@@ -290,7 +290,7 @@ module Rom
 
     desc 'version', 'Print program version'
     def version
-      puts Rom::VERSION
+      puts Gamerom::VERSION
     end
 
     private

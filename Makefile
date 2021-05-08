@@ -1,6 +1,6 @@
-VERSION:=$(shell cat lib/rom/version.rb |grep VERSION|cut -d\" -f2)
-IMAGE=lucasmundim/rom:${VERSION}
-DOCKER_OPTS=--rm -it -v ${HOME}/.rom:/root/.rom ${IMAGE}
+VERSION:=$(shell cat lib/gamerom/version.rb |grep VERSION|cut -d\" -f2)
+IMAGE=lucasmundim/gamerom:${VERSION}
+DOCKER_OPTS=--rm -it -v ${HOME}/.gamerom:/root/.gamerom ${IMAGE}
 LOCAL_VOLUME_OPTS=-v ${CURDIR}:/app
 DOCKER_DEVELOPMENT_OPTS=${LOCAL_VOLUME_OPTS} --entrypoint '' ${DOCKER_OPTS}
 

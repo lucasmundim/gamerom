@@ -13,4 +13,4 @@ WORKDIR /app
 COPY . .
 RUN bundle install
 
-ENTRYPOINT ["bundle", "exec", "./exe/rom"]
+ENTRYPOINT ["bundle", "exec", "./exe/gamerom"]

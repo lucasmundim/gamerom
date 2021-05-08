@@ -3,14 +3,14 @@
 require 'fileutils'
 require 'ostruct'
 
-module Rom
+module Gamerom
   class Game < OpenStruct
     def filename
       "#{self.filepath}/#{File.read(self.state_filename)}"
     end
 
     def filepath
-      "#{Rom::GAME_DIR}/#{self.repo.name}/#{self.platform}/#{self.region}"
+      "#{Gamerom::GAME_DIR}/#{self.repo.name}/#{self.platform}/#{self.region}"
     end
 
     def install
@@ -24,7 +24,7 @@ module Rom
     end
 
     def state_filename
-      "#{Rom::STATE_DIR}/#{self.repo.name}/#{self.platform}/#{self.region}/#{self.id}"
+      "#{Gamerom::STATE_DIR}/#{self.repo.name}/#{self.platform}/#{self.region}/#{self.id}"
     end
 
     def to_s
@@ -37,7 +37,7 @@ module Rom
     end
 
     def update_state filename
-      FileUtils.mkdir_p("#{Rom::STATE_DIR}/#{self.repo.name}/#{self.platform}/#{self.region}")
+      FileUtils.mkdir_p("#{Gamerom::STATE_DIR}/#{self.repo.name}/#{self.platform}/#{self.region}")
       File.write(self.state_filename, filename)
     end
 

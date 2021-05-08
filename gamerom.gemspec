@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-require_relative "lib/rom/version"
+require_relative "lib/gamerom/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "rom"
-  spec.version       = Rom::VERSION
+  spec.name          = "gamerom"
+  spec.version       = Gamerom::VERSION
   spec.authors       = ["Lucas Mundim"]
   spec.email         = ["lucas.mundim@gmail.com"]
 
   spec.summary       = "The Video Game ROM downloader"
   spec.description   = "A command-line installer for game ROMs from many repositories."
-  spec.homepage      = "https://github.com/lucasmundim/rom"
+  spec.homepage      = "https://github.com/lucasmundim/gamerom"
   spec.license       = "MIT"
   spec.required_ruby_version = Gem::Requirement.new(">= 3.0.0")
 

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rom (0.1.0)
+    gamerom (0.1.0)
       mechanize (~> 2.8.0)
       nokogiri (~> 1.11.3)
       rest-client (~> 2.1.0)
@@ -95,8 +95,8 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
+  gamerom!
   rake (~> 13.0)
-  rom!
   rspec (~> 3.0)
   rubocop (~> 0.80)
 

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe Rom do
+RSpec.describe Gamerom do
   it "has a version number" do
-    expect(Rom::VERSION).not_to be nil
+    expect(Gamerom::VERSION).not_to be nil
   end
 
   it "does something useful" do

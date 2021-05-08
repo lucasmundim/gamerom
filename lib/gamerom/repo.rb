@@ -10,7 +10,7 @@ REPOSITORIES.each do |repo|
   require_relative "repo_adapters/#{repo}"
 end
 
-module Rom
+module Gamerom
   class Repo
     def self.list
       REPOSITORIES.map do |repo|
@@ -20,7 +20,7 @@ module Rom
 
     def initialize name
       @name = name
-      @repo = Rom::RepoAdapters.const_get(name.capitalize)
+      @repo = Gamerom::RepoAdapters.const_get(name.capitalize)
     end
 
     def install game, &block
@@ -38,7 +38,7 @@ module Rom
     end
 
     def games platform, options={}
-      platform_database = "#{Rom::CACHE_DIR}/#{@name}/#{platform}.yml"
+      platform_database = "#{Gamerom::CACHE_DIR}/#{@name}/#{platform}.yml"
       update_database platform unless File.exists? platform_database
       games = YAML.load_file(platform_database).map { |game|
         Game.new(game.merge(platform: platform, repo: self))
@@ -78,8 +78,8 @@ module Rom
     def update_database platform
       games = @repo.games platform
       puts
-      FileUtils.mkdir_p("#{Rom::CACHE_DIR}/#{@name}")
-      File.write("#{Rom::CACHE_DIR}/#{@name}/#{platform}.yml", games.to_yaml)
+      FileUtils.mkdir_p("#{Gamerom::CACHE_DIR}/#{@name}")
+      File.write("#{Gamerom::CACHE_DIR}/#{@name}/#{platform}.yml", games.to_yaml)
     end
   end
 end

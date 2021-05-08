@@ -3,7 +3,7 @@
 require 'nokogiri'
 require 'rest-client'
 
-module Rom
+module Gamerom
   module RepoAdapters
     class Coolrom
       PLATFORM = {

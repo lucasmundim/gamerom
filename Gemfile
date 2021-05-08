@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-# Specify your gem's dependencies in rom.gemspec
+# Specify your gem's dependencies in gamerom.gemspec
 gemspec
 
 gem "rake", "~> 13.0"

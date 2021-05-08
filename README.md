@@ -1,4 +1,4 @@
-# Rom - The Video Game ROM downloader
+# Gamerom - The Video Game ROM downloader
 
 A command-line installer for game ROMs from many repositories.
 
@@ -14,64 +14,64 @@ It currently supports the following repositories:
 Add this to your .bashrc, .bash_aliases, etc:
 
 ```
-alias rom='docker run --rm -it -v ~/.rom:/root/.rom docker.io/lucasmundim/rom:0.1.0'
+alias gamerom='docker run --rm -it -v ~/.gamerom:/root/.gamerom docker.io/lucasmundim/gamerom:0.1.0'
 ```
 
 Use it as:
 
 ```
-rom help
+gamerom help
 ```
 
 ### Using Rubygems
 
 Install it as a regular gem:
 
-    $ gem install rom
+    $ gem install gamerom
 
 Use it as:
 
 ```
-rom help
+gamerom help
 ```
 
 ### Using Git
 
 Clone, cd into, bundle install, and bundle exec:
 
-    $ git clone git@github.com:lucasmundim/rom.git
+    $ git clone git@github.com:lucasmundim/gamerom.git
     $ cd rom/
     $ bundle install
 
 Use it as:
 
-    $ bundle exec ./exe/rom help
+    $ bundle exec ./exe/gamerom help
 
 ## Usage
 
 ### help
 
 ```
-$ rom help
+$ gamerom help
 Commands:
-  rom config                                                             # Show config
-  rom help [COMMAND]                                                     # Describe available commands or one specific command
-  rom info GAME_IDENTIFIER -p, --platform=PLATFORM -r, --repo=REPO       # Info for game GAME_IDENTIFIER (id/name)
-  rom install GAME_IDENTIFIER -p, --platform=PLATFORM -r, --repo=REPO    # Install game GAME_IDENTIFIER (id/name)
-  rom install_all -p, --platform=PLATFORM -r, --repo=REPO                # Install all games
-  rom list -p, --platform=PLATFORM -r, --repo=REPO                       # List available games
-  rom platforms -r, --repo=REPO                                          # List available platforms
-  rom recover -p, --platform=PLATFORM -r, --repo=REPO                    # Try to recover state from already downloaded roms
-  rom regions -p, --platform=PLATFORM -r, --repo=REPO                    # List available regions
-  rom repo                                                               # List available repo
-  rom search KEYWORD -p, --platform=PLATFORM -r, --repo=REPO             # Search games by KEYWORD
-  rom stats -p, --platform=PLATFORM -r, --repo=REPO                      # Show platform stats
-  rom stats_all -r, --repo=REPO                                          # Show stats for all platforms
-  rom uninstall GAME_IDENTIFIER -p, --platform=PLATFORM -r, --repo=REPO  # Uninstall game GAME_IDENTIFIER (id/name)
-  rom uninstall_all -p, --platform=PLATFORM -r, --repo=REPO              # Uninstall all games
-  rom update_all_databases -r, --repo=REPO                               # Update all local databases
-  rom update_database -p, --platform=PLATFORM -r, --repo=REPO            # Update local database
-  rom version                                                            # Print program version
+  gamerom config                                                             # Show config
+  gamerom help [COMMAND]                                                     # Describe available commands or one specific command
+  gamerom info GAME_IDENTIFIER -p, --platform=PLATFORM -r, --repo=REPO       # Info for game GAME_IDENTIFIER (id/name)
+  gamerom install GAME_IDENTIFIER -p, --platform=PLATFORM -r, --repo=REPO    # Install game GAME_IDENTIFIER (id/name)
+  gamerom install_all -p, --platform=PLATFORM -r, --repo=REPO                # Install all games
+  gamerom list -p, --platform=PLATFORM -r, --repo=REPO                       # List available games
+  gamerom platforms -r, --repo=REPO                                          # List available platforms
+  gamerom recover -p, --platform=PLATFORM -r, --repo=REPO                    # Try to recover state from already downloaded roms
+  gamerom regions -p, --platform=PLATFORM -r, --repo=REPO                    # List available regions
+  gamerom repo                                                               # List available repo
+  gamerom search KEYWORD -p, --platform=PLATFORM -r, --repo=REPO             # Search games by KEYWORD
+  gamerom stats -p, --platform=PLATFORM -r, --repo=REPO                      # Show platform stats
+  gamerom stats_all -r, --repo=REPO                                          # Show stats for all platforms
+  gamerom uninstall GAME_IDENTIFIER -p, --platform=PLATFORM -r, --repo=REPO  # Uninstall game GAME_IDENTIFIER (id/name)
+  gamerom uninstall_all -p, --platform=PLATFORM -r, --repo=REPO              # Uninstall all games
+  gamerom update_all_databases -r, --repo=REPO                               # Update all local databases
+  gamerom update_database -p, --platform=PLATFORM -r, --repo=REPO            # Update local database
+  gamerom version                                                            # Print program version
 
 Options:
   -v, [--verbose], [--no-verbose]  # Show verbose backtrace
@@ -82,7 +82,7 @@ Options:
 List available repo
 
 ```
-$ rom repo
+$ gamerom repo
 listing available repo...
 coolrom
 vimm
@@ -93,7 +93,7 @@ vimm
 List available platforms
 
 ```
-$ rom platform --repo coolrom
+$ gamerom platform --repo coolrom
 listing available platforms for coolrom repo...
 ---
 :platforms:
@@ -123,7 +123,7 @@ listing available platforms for coolrom repo...
 ```
 
 ```
-$ rom platform -r vimm
+$ gamerom platform -r vimm
 listing available platforms for vimm repo...
 ---
 :platforms:
@@ -151,7 +151,7 @@ listing available platforms for vimm repo...
 List available games
 
 ```
-$ rom list -r coolrom -p namcosystem22
+$ gamerom list -r coolrom -p namcosystem22
 listing available games for namcosystem22 platform on coolrom repo...
 ID   NAME           REGION  INSTALLED
 316  Rave Racer     USA     installed
@@ -160,7 +160,7 @@ ID   NAME           REGION  INSTALLED
 
 Filtering by region:
 ```
-$ rom list -r coolrom -p model2 -g Japan
+$ gamerom list -r coolrom -p model2 -g Japan
 listing available games for model2 platform on coolrom repo...
 ID     NAME                               REGION  INSTALLED
 12952  Virtual On Cyber Troopers (Japan)  Japan   -
@@ -172,7 +172,7 @@ ID     NAME                               REGION  INSTALLED
 Search games by KEYWORD
 
 ```
-$ rom search -r vimm -p SNES zelda
+$ gamerom search -r vimm -p SNES zelda
 searching available games for SNES platform on vimm repo...
 ID    NAME                                      REGION  INSTALLED
 1346  Legend of Zelda, The: A Link to the Past  USA     -
@@ -183,7 +183,7 @@ ID    NAME                                      REGION  INSTALLED
 List available regions
 
 ```
-$ rom regions -r coolrom -p genesis
+$ gamerom regions -r coolrom -p genesis
 listing available regions for genesis platform on coolrom repo...
 Australia
 Brazil
@@ -203,7 +203,7 @@ USA
 Install game GAME_IDENTIFIER (id/name)
 
 ```
-$ rom install -r vimm -p NES 'Mega Man'
+$ gamerom install -r vimm -p NES 'Mega Man'
 installing game 545 - Mega Man - USA on NES platform on vimm repo...
 Game installed
 ```
@@ -213,7 +213,7 @@ Game installed
 Install all games
 
 ```
-$ bundle exec ./exe/rom install_all -r coolrom -p genesis -g Brazil
+$ gamerom install_all -r coolrom -p genesis -g Brazil
 installing game 48155 - Duke Nukem 3D (Brazil) - Brazil on genesis platform on coolrom repo...
 Game installed
 installing game 6501 - Ferias Frustradas do Pica-Pau (Brazil) - Brazil on genesis platform on coolrom repo...
@@ -247,7 +247,7 @@ Game installed
 Uninstall game GAME_IDENTIFIER (id/name)
 
 ```
-$ rom uninstall -r coolrom -p gamegear 7493
+$ gamerom uninstall -r coolrom -p gamegear 7493
 uninstalling game 7493 - Zoop - USA on gamegear platform...
 Game uninstalled
 ```
@@ -257,7 +257,7 @@ Game uninstalled
 Uninstall all games
 
 ```
-$ rom uninstall_all -r coolrom -p gamegear
+$ gamerom uninstall_all -r coolrom -p gamegear
 uninstalling game 7274 - 007 James Bond - The Duel - USA on gamegear platform...
 Game uninstalled
 uninstalling game 7414 - 5 in 1 Funpak - USA on gamegear platform...
@@ -271,10 +271,10 @@ Game uninstalled
 Info for game GAME_IDENTIFIER (id/name)
 
 ```
-$ rom info --repo coolrom --platform atari2600 adventure
+$ gamerom info --repo coolrom --platform atari2600 adventure
 showing info for game adventure on atari2600 platform on coolrom repo...
 15913 - Adventure - USA (installed)
-/Users/lucas/.rom/games/coolrom/atari2600/USA/Adventure.zip
+/Users/lucas/.gamerom/games/coolrom/atari2600/USA/Adventure.zip
 ```
 
 ### update_database
@@ -282,7 +282,7 @@ showing info for game adventure on atari2600 platform on coolrom repo...
 Update local database
 
 ```
-$ rom update_database --repo vimm --platform SNES
+$ gamerom update_database --repo vimm --platform SNES
 updating SNES platform on vimm repo...
 number a b c d e f g h i j k l m n o p q r s t u v w x y z
 Game database updated for platform SNES on vimm repo
@@ -293,7 +293,7 @@ Game database updated for platform SNES on vimm repo
 Update all local databases
 
 ```
-$ rom update_all_databases -r vimm
+$ gamerom update_all_databases -r vimm
 updating Dreamcast platform on vimm repo...
 number a b c d e f g h i j k l m n o p q r s t u v w x y z
 Game database updated for platform Dreamcast on vimm repo
@@ -353,7 +353,7 @@ All game databases updated
 Show platform stats
 
 ```
-$ rom stats -r coolrom -p gamegear
+$ gamerom stats -r coolrom -p gamegear
 stats for gamegear platform on coolrom repo...
   All: 4/337 - size: 440K
   Japan: 0/45 - size: 0
@@ -365,7 +365,7 @@ stats for gamegear platform on coolrom repo...
 Show stats for all platforms
 
 ```
-$ rom stats_all -r coolrom
+$ gamerom stats_all -r coolrom
 stats for atari2600 platform on coolrom repo...
   All: 645/645 - size: 3.6M
   USA: 645/645 - size: 3.6M
@@ -526,11 +526,11 @@ stats for psp platform on coolrom repo...
 Show config
 
 ```
-$ rom config
-{:ROM_ROOT=>"/Users/lucas/.rom",
- :CACHE_DIR=>"/Users/lucas/.rom/cache",
- :GAME_DIR=>"/Users/lucas/.rom/games",
- :LOG_DIR=>"/Users/lucas/.rom/logs"}
+$ gamerom config
+{:ROM_ROOT=>"/Users/lucas/.gamerom",
+ :CACHE_DIR=>"/Users/lucas/.gamerom/cache",
+ :GAME_DIR=>"/Users/lucas/.gamerom/games",
+ :LOG_DIR=>"/Users/lucas/.gamerom/logs"}
 ```
 
 ### version
@@ -538,7 +538,7 @@ $ rom config
 Print program version
 
 ```
-$ rom version
+$ gamerom version
 0.1.0
 ```
 
@@ -550,7 +550,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/lucasmundim/rom. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/lucasmundim/rom/blob/master/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/lucasmundim/gamerom. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/lucasmundim/gamerom/blob/master/CODE_OF_CONDUCT.md).
 
 ## License
 
@@ -558,4 +558,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the Rom project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/lucasmundim/rom/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the Gamerom project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/lucasmundim/gamerom/blob/master/CODE_OF_CONDUCT.md).
