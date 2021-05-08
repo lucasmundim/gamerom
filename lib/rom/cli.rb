@@ -65,7 +65,7 @@ module Rom
     desc 'install_all', 'Install all games'
     option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Rom::Repo.list.map(&:to_s)
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use"
-    option :region, :aliases => ['-r'], type: :string, required: false, desc: "Only from specified region"
+    option :region, :aliases => ['-g'], type: :string, required: false, desc: "Only from specified region"
     def install_all
       repo = Repo.new(options[:repo])
       validate_platform repo, options[:platform]
@@ -81,7 +81,7 @@ module Rom
     desc 'list', 'List games'
     option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Rom::Repo.list.map(&:to_s)
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use"
-    option :region, :aliases => ['-r'], type: :string, required: false, desc: "Only from specified region"
+    option :region, :aliases => ['-g'], type: :string, required: false, desc: "Only from specified region"
     def list
       repo = Repo.new(options[:repo])
       validate_platform repo, options[:platform]
@@ -163,7 +163,7 @@ module Rom
     desc 'search KEYWORD', 'Search games by KEYWORD'
     option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Rom::Repo.list.map(&:to_s)
     option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use"
-    option :region, :aliases => ['-r'], type: :string, required: false, desc: "Only from specified region"
+    option :region, :aliases => ['-g'], type: :string, required: false, desc: "Only from specified region"
     def search(keyword)
       repo = Repo.new(options[:repo])
       validate_platform repo, options[:platform]
