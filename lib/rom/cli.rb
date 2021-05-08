@@ -243,6 +243,22 @@ module Rom
       exit 1
     end
 
+    desc 'uninstall_all', 'Uninstall all games'
+    option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Rom::Repo.list.map(&:to_s)
+    option :platform, :aliases => ['-p'], type: :string, required: true, desc: "Which platform to use"
+    option :region, :aliases => ['-g'], type: :string, required: false, desc: "Only from specified region"
+    def uninstall_all
+      repo = Repo.new(options[:repo])
+      validate_platform repo, options[:platform]
+      games = repo.games options[:platform], region: options[:region]
+      games.each do |game|
+        uninstall(game.id) if game.installed?
+      end
+    rescue => e
+      render_error e, options
+      exit 1
+    end
+
     desc 'update_all_databases', 'Update all local databases'
     option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Rom::Repo.list.map(&:to_s)
     def update_all_databases
