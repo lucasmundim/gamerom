@@ -38,11 +38,11 @@ module Rom
 
       def self.games(platform)
         games = []
-        letters = ('a'..'z').to_a.unshift("0")
+        sections = ('a'..'z').to_a.unshift("0")
 
-        letters.each do |letter|
-          print "#{letter} "
-          page = Nokogiri::HTML(RestClient.get("https://coolrom.com.au/roms/#{platform}/#{letter}/"))
+        sections.each do |section|
+          print "#{section} "
+          page = Nokogiri::HTML(RestClient.get("https://coolrom.com.au/roms/#{platform}/#{section}/"))
           regions = page.css('input.region').map { |i| i["name"] }
           regions.each do |region|
             games.append *page.css("div.#{region} a").map { |game|
