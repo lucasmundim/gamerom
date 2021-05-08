@@ -4,6 +4,8 @@ require 'thor'
 
 module Rom
   class Cli < Thor
+    class_option :verbose, :aliases => ['-v'], :type => :boolean, default: false, desc: "Show verbose backtrace"
+
     def self.exit_on_failure?
       true
     end
@@ -33,7 +35,7 @@ module Rom
       puts game
       puts game.filename if game.installed?
     rescue => e
-      shell.say e.message, :red
+      render_error e, options
       exit 1
     end
 
@@ -56,7 +58,7 @@ module Rom
       game.install
       shell.say "Game installed", :green
     rescue => e
-      shell.say e.message, :red
+      render_error e, options
       exit 1
     end
 
@@ -72,7 +74,7 @@ module Rom
         install(game.id) unless game.installed?
       end
     rescue => e
-      shell.say e.message, :red
+      render_error e, options
       exit 1
     end
 
@@ -87,7 +89,7 @@ module Rom
       games = repo.games options[:platform], region: options[:region]
       print_game_table(games)
     rescue => e
-      shell.say e.message, :red
+      render_error e, options
       exit 1
     end
 
@@ -98,7 +100,7 @@ module Rom
       platforms = { platforms: Repo.new(options[:repo]).platforms }
       puts platforms.to_yaml
     rescue => e
-      shell.say e.message, :red
+      render_error e, options
       exit 1
     end
 
@@ -145,7 +147,7 @@ module Rom
       puts "listing available regions for #{options[:platform]} platform on #{options[:repo]} repo..."
       puts repo.regions options[:platform]
     rescue => e
-      shell.say e.message, :red
+      render_error e, options
       exit 1
     end
 
@@ -154,7 +156,7 @@ module Rom
       puts "listing available repo..."
       puts Repo.list
     rescue => e
-      shell.say e.message, :red
+      render_error e, options
       exit 1
     end
 
@@ -169,7 +171,7 @@ module Rom
       games = repo.games options[:platform], region: options[:region], keyword: keyword
       print_game_table(games)
     rescue => e
-      shell.say e.message, :red
+      render_error e, options
       exit 1
     end
 
@@ -200,7 +202,7 @@ module Rom
       end
       puts
     rescue => e
-      shell.say e.message, :red
+      render_error e, options
       exit 1
     end
 
@@ -214,7 +216,7 @@ module Rom
         a.stats
       end
     rescue => e
-      shell.say e.message, :red
+      render_error e, options
       exit 1
     end
 
@@ -237,7 +239,7 @@ module Rom
       game.uninstall
       shell.say "Game uninstalled", :green
     rescue => e
-      shell.say e.message, :red
+      render_error e, options
       exit 1
     end
 
@@ -252,7 +254,7 @@ module Rom
       end
       shell.say 'All game databases updated', :green
     rescue => e
-      shell.say e.message, :red
+      render_error e, options
       exit 1
     end
 
@@ -266,7 +268,7 @@ module Rom
       repo.update_database options[:platform]
       shell.say "Game database updated for platform #{options[:platform]} on #{options[:repo]} repo", :green
     rescue => e
-      shell.say e.message, :red
+      render_error e, options
       exit 1
     end
 
@@ -290,6 +292,11 @@ module Rom
       results.sort_by! { |columns| columns[1] }
       results.unshift ['ID', 'NAME', 'REGION', 'INSTALLED']
       shell.print_table(results)
+    end
+
+    def render_error exception, options
+      shell.say exception.message, :red
+      shell.say exception.full_message.force_encoding('utf-8'), :red if options[:verbose]
     end
 
     def validate_platform(repo, platform)
