@@ -14,9 +14,7 @@ module Rom
     end
 
     def install
-      self.repo.install self do |file, filename|
-        FileUtils.mkdir_p(self.filepath)
-        FileUtils.cp(file, "#{self.filepath}/#{filename}")
+      self.repo.install self do |filename|
         self.update_state filename
       end
     end

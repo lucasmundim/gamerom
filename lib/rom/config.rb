@@ -3,6 +3,7 @@
 require 'fileutils'
 require 'logger'
 require 'rest-client'
+require 'mechanize'
 
 module Rom
   ROM_ROOT = ENV['ROM_ROOT'] || File.expand_path("~/.rom")
@@ -13,4 +14,6 @@ module Rom
 end
 
 FileUtils.mkdir_p(Rom::LOG_DIR)
-RestClient.log = Logger.new("#{Rom::LOG_DIR}/requests.log")
+logger = Logger.new("#{Rom::LOG_DIR}/requests.log")
+RestClient.log = logger
+Mechanize.log = logger

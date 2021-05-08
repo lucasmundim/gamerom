@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     rom (0.1.0)
+      mechanize (~> 2.8.0)
       nokogiri (~> 1.11.3)
       rest-client (~> 2.1.0)
       thor (~> 1.1.0)
@@ -9,16 +10,33 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
+    addressable (2.7.0)
+      public_suffix (>= 2.0.2, < 5.0)
     ast (2.4.2)
+    connection_pool (2.2.5)
     diff-lcs (1.4.4)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
     http-accept (1.7.0)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
+    mechanize (2.8.0)
+      addressable (~> 2.7)
+      domain_name (~> 0.5, >= 0.5.20190701)
+      http-cookie (~> 1.0, >= 1.0.3)
+      mime-types (~> 3.0)
+      net-http-digest_auth (~> 1.4, >= 1.4.1)
+      net-http-persistent (>= 2.5.2, < 5.0.dev)
+      nokogiri (~> 1.11, >= 1.11.2)
+      rubyntlm (~> 0.6, >= 0.6.3)
+      webrick (~> 1.7)
+      webrobots (~> 0.1.2)
     mime-types (3.3.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2021.0225)
+    net-http-digest_auth (1.4.1)
+    net-http-persistent (4.0.1)
+      connection_pool (~> 2.2)
     netrc (0.11.0)
     nokogiri (1.11.3-x86_64-darwin)
       racc (~> 1.4)
@@ -27,6 +45,7 @@ GEM
     parallel (1.20.1)
     parser (3.0.1.0)
       ast (~> 2.4.1)
+    public_suffix (4.0.6)
     racc (1.5.2)
     rainbow (3.0.0)
     rake (13.0.3)
@@ -62,11 +81,14 @@ GEM
     rubocop-ast (1.4.1)
       parser (>= 2.7.1.5)
     ruby-progressbar (1.11.0)
+    rubyntlm (0.6.3)
     thor (1.1.0)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.7)
     unicode-display_width (1.7.0)
+    webrick (1.7.0)
+    webrobots (0.1.2)
 
 PLATFORMS
   x86_64-darwin-20

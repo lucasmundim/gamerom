@@ -67,7 +67,9 @@ module Rom
         )
         if response.code == 200
           filename = response.headers[:content_disposition].split('; ')[1].split('"')[1]
-          yield response.file.path, filename
+          FileUtils.mkdir_p(game.filepath)
+          FileUtils.cp(response.file.path, "#{game.filepath}/#{filename}")
+          yield filename
         end
       end
     end
