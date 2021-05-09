@@ -14,7 +14,7 @@ It currently supports the following repositories:
 Add this to your .bashrc, .bash_aliases, etc:
 
 ```
-alias gamerom='docker run --rm -it -v ~/.gamerom:/root/.gamerom docker.io/lucasmundim/gamerom:0.1.0'
+alias gamerom='docker run --rm -it -v ~/.gamerom:/root/.gamerom docker.io/lucasmundim/gamerom:0.2.0'
 ```
 
 Use it as:
@@ -539,7 +539,7 @@ Print program version
 
 ```
 $ gamerom version
-0.1.0
+0.2.0
 ```
 
 ## Development
