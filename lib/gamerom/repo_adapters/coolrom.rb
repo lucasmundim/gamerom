@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'mechanize'
+require 'mechanize/progressbar'
+require 'mechanizeprogress'
 require 'nokogiri'
 require 'rest-client'
 
@@ -58,20 +61,19 @@ module Gamerom
       end
 
       def self.install(game)
-        response = RestClient::Request.execute(
-          method: :get,
-          url: "https://coolrom.com.au/downloader.php?id=#{game.id}",
-          headers: {
-            'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36",
-          },
-          raw_response: true,
-        )
-        if response.code == 200
-          filename = response.headers[:content_disposition].split('; ')[1].split('"')[1]
+        agent = Mechanize.new
+        agent.pluggable_parser.default = Mechanize::Download
+        agent.user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
+
+        response = nil
+        agent.progressbar{
+          response = agent.get("https://coolrom.com.au/downloader.php?id=#{game.id}")
+        }
+        if response.code.to_i == 200
+          filename = response.filename
           FileUtils.mkdir_p(game.filepath)
-          FileUtils.cp(response.file.path, "#{game.filepath}/#{filename}")
-          filenames << filename
-          yield filenames
+          response.save!("#{game.filepath}/#{filename}")
+          yield [filename]
         end
       end
     end
