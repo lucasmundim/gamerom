@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'mechanize'
+require 'mechanize/progressbar'
+require 'mechanizeprogress'
 require 'nokogiri'
 require 'rest-client'
 
@@ -73,7 +75,10 @@ module Gamerom
           form.action = "https://download4.vimm.net/download/?mediaId=#{game_file[:id]}"
           form.method = 'GET'
           button = form.button_with(:type => "submit")
-          response = form.click_button(button)
+          response = nil
+          agent.progressbar{
+            response = form.click_button(button)
+          }
           if response.code.to_i == 200
             filename = response.filename
             response.save!("#{game.filepath}/#{filename}")

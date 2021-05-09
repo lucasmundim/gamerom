@@ -30,7 +30,9 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_runtime_dependency "mechanize", "~> 2.8.0"
+  spec.add_runtime_dependency "mechanize-progressbar", "~> 0.2.0"
   spec.add_runtime_dependency "nokogiri", "~> 1.11.3"
+  spec.add_runtime_dependency "progressbar", "~> 0.9.0"
   spec.add_runtime_dependency "rest-client", "~> 2.1.0"
   spec.add_runtime_dependency "thor", "~> 1.1.0"
 
