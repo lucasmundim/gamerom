@@ -76,6 +76,7 @@ module Gamerom
           form.method = 'GET'
           button = form.button_with(:type => "submit")
           response = nil
+          form['mediaId'] = game_file[:id]
           agent.progressbar{
             response = form.click_button(button)
           }
