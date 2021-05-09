@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    gamerom (0.2.0)
+    gamerom (0.2.1)
       mechanize (~> 2.8.0)
       mechanize-progressbar (~> 0.2.0)
       nokogiri (~> 1.11.3)
@@ -22,7 +22,7 @@ GEM
     http-accept (1.7.0)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
-    mechanize (2.8.0)
+    mechanize (2.8.1)
       addressable (~> 2.7)
       domain_name (~> 0.5, >= 0.5.20190701)
       http-cookie (~> 1.0, >= 1.0.3)
