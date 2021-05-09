@@ -50,21 +50,37 @@ module Gamerom
       end
 
       def self.install(game)
+        FileUtils.mkdir_p(game.filepath)
         agent = Mechanize.new
         agent.pluggable_parser.default = Mechanize::Download
         agent.user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
         page = agent.get("https://vimm.net/vault/#{game.id}")
         form = page.form_with(:id => 'download_form')
-        form.action = "https://download4.vimm.net/download/?mediaId=#{game.id}"
-        form.method = 'GET'
-        button = form.button_with(:type => "submit")
-        response = form.click_button(button)
-        if response.code.to_i == 200
-          filename = response.filename
-          FileUtils.mkdir_p(game.filepath)
-          response.save!("#{game.filepath}/#{filename}")
-          yield filename
+
+        filenames = []
+        game_files = []
+        multiple_disks = page.css('#download_disc_number')
+
+        if multiple_disks.empty?
+          game_files << { id: game.id, name: 'single file rom' }
+        else
+          puts "multiple discs detected"
+          game_files.concat multiple_disks.children[1..-2].map { |disk| { name: disk.text, id: disk['value']} }
         end
+
+        game_files.each do |game_file|
+          puts "downloading #{game_file[:name]}"
+          form.action = "https://download4.vimm.net/download/?mediaId=#{game_file[:id]}"
+          form.method = 'GET'
+          button = form.button_with(:type => "submit")
+          response = form.click_button(button)
+          if response.code.to_i == 200
+            filename = response.filename
+            response.save!("#{game.filepath}/#{filename}")
+            filenames << filename
+          end
+        end
+        yield filenames
       end
     end
   end

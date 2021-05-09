@@ -33,7 +33,7 @@ module Gamerom
         shell.say "Game #{game_identifier} not found", :red
       end
       puts game
-      puts game.filename if game.installed?
+      puts game.filenames if game.installed?
     rescue => e
       render_error e, options
       exit 1

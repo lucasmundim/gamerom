@@ -70,7 +70,8 @@ module Gamerom
           filename = response.headers[:content_disposition].split('; ')[1].split('"')[1]
           FileUtils.mkdir_p(game.filepath)
           FileUtils.cp(response.file.path, "#{game.filepath}/#{filename}")
-          yield filename
+          filenames << filename
+          yield filenames
         end
       end
     end

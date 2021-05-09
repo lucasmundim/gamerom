@@ -2,11 +2,14 @@
 
 require 'fileutils'
 require 'ostruct'
+require 'yaml'
 
 module Gamerom
   class Game < OpenStruct
-    def filename
-      "#{self.filepath}/#{File.read(self.state_filename)}"
+    def filenames
+      YAML.load_file(self.state_filename).map do |filename|
+        "#{self.filepath}/#{filename}"
+      end
     end
 
     def filepath
@@ -14,8 +17,8 @@ module Gamerom
     end
 
     def install
-      self.repo.install self do |filename|
-        self.update_state filename
+      self.repo.install self do |filenames|
+        self.update_state filenames
       end
     end
 
@@ -32,13 +35,13 @@ module Gamerom
     end
 
     def uninstall
-      FileUtils.rm_rf self.filename
+      FileUtils.rm_rf self.filenames
       FileUtils.rm_rf self.state_filename
     end
 
-    def update_state filename
+    def update_state filenames
       FileUtils.mkdir_p("#{Gamerom::STATE_DIR}/#{self.repo.name}/#{self.platform}/#{self.region}")
-      File.write(self.state_filename, filename)
+      File.write(self.state_filename, filenames.to_yaml)
     end
 
     private
