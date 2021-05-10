@@ -64,7 +64,7 @@ module Gamerom
         multiple_disks = page.css('#download_disc_number')
 
         if multiple_disks.empty?
-          game_files << { id: game.id, name: 'single file rom' }
+          game_files << { id: form['mediaId'], name: 'single file rom' }
         else
           puts "multiple discs detected"
           game_files.concat multiple_disks.children[1..-2].map { |disk| { name: disk.text, id: disk['value']} }
@@ -72,7 +72,6 @@ module Gamerom
 
         game_files.each do |game_file|
           puts "downloading #{game_file[:name]}"
-          form.action = "https://download4.vimm.net/download/?mediaId=#{game_file[:id]}"
           form.method = 'GET'
           button = form.button_with(:type => "submit")
           response = nil
