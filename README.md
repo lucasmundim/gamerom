@@ -195,18 +195,18 @@ List available games
 ```
 $ gamerom list -r coolrom -p namcosystem22
 listing available games for namcosystem22 platform on coolrom repo...
-ID   NAME           REGION  INSTALLED
-316  Rave Racer     USA     installed
-318  Ridge Racer 2  USA     -
+ID   NAME           REGION  INSTALLED           TAGS
+316  Rave Racer     USA     installed  -
+318  Ridge Racer 2  USA     installed  -
 ```
 
 Filtering by region:
 ```
 $ gamerom list -r coolrom -p model2 -g Japan
 listing available games for model2 platform on coolrom repo...
-ID     NAME                               REGION  INSTALLED
-12952  Virtual On Cyber Troopers (Japan)  Japan   -
-12956  Zero Gunner (Japan Model 2B)       Japan   -
+ID     NAME                               REGION  INSTALLED  TAGS
+12952  Virtual On Cyber Troopers (Japan)  Japan   -          -
+12956  Zero Gunner (Japan Model 2B)       Japan   -          -
 ```
 
 ### search
@@ -214,10 +214,12 @@ ID     NAME                               REGION  INSTALLED
 Search games by KEYWORD
 
 ```
-$ gamerom search -r vimm -p SNES zelda
-searching available games for SNES platform on vimm repo...
-ID    NAME                                      REGION  INSTALLED
-1346  Legend of Zelda, The: A Link to the Past  USA     -
+$ gamerom search -r romnation -p segamastersystem "Alex Kidd in Shinobi World"
+searching available games for segamastersystem platform on romnation repo...
+ID     NAME                                  REGION  INSTALLED  TAGS
+39126  Alex Kidd in Shinobi World (UE) [!]   USA     -          good
+39127  Alex Kidd in Shinobi World (UE) [b1]  USA     -          bad
+39128  Alex Kidd in Shinobi World (UE) [b2]  USA     -          bad
 ```
 
 ### regions
@@ -247,6 +249,9 @@ Install game GAME_IDENTIFIER (id/name)
 ```
 $ gamerom install -r vimm -p NES 'Mega Man'
 installing game 545 - Mega Man - USA on NES platform on vimm repo...
+downloading single file rom
+http://download4.vimm.net/download/?mediaId=530
+100% |ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo|  74.8KB  46.3KB/s Time: 00:00:01
 Game installed
 ```
 
@@ -257,30 +262,56 @@ Install all games
 ```
 $ gamerom install_all -r coolrom -p genesis -g Brazil
 installing game 48155 - Duke Nukem 3D (Brazil) - Brazil on genesis platform on coolrom repo...
+http://dl.coolrom.com.au/dl/48155/5dK3T--nRZaY8u4PI5T8cA/1621206423/
+100% |ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| 871.7KB 947.8KB/s Time: 00:00:00
 Game installed
 installing game 6501 - Ferias Frustradas do Pica-Pau (Brazil) - Brazil on genesis platform on coolrom repo...
+http://dl.coolrom.com.au/dl/6501/ZRVwx6lSpE6lRovr9xyEdg/1621206427/
+100% |ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| 383.1KB 679.3KB/s Time: 00:00:00
 Game installed
 installing game 6358 - Mega Games 10 (Brazil) - Brazil on genesis platform on coolrom repo...
+http://dl.coolrom.com.au/dl/6358/kjK-Zsuc0pr0JEqvG_G80Q/1621206429/
+100% |ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo|   2.6MB   1.1MB/s Time: 00:00:02
 Game installed
 installing game 47766 - Phantasy Star II (Brazil) - Brazil on genesis platform on coolrom repo...
+http://dl.coolrom.com.au/dl/47766/wH66hX5V4j3oShDXn511NA/1621206434/
+100% |ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| 455.1KB 602.7KB/s Time: 00:00:00
 Game installed
 installing game 5683 - Sega Top Five (Brazil) - Brazil on genesis platform on coolrom repo...
+http://dl.coolrom.com.au/dl/5683/2DjilMgmxbTPShCju0uCiA/1621206436/
+100% |ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo|   1.2MB 998.2KB/s Time: 00:00:01
 Game installed
 installing game 47898 - Show do Milhao (Brazil) - Brazil on genesis platform on coolrom repo...
+http://dl.coolrom.com.au/dl/47898/_T8xacEEtXt1iYsFG6MzFw/1621206439/
+100% |ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo|   1.2MB 931.3KB/s Time: 00:00:01
 Game installed
 installing game 47909 - Show do Milhao Volume 2 (Brazil) - Brazil on genesis platform on coolrom repo...
+http://dl.coolrom.com.au/dl/47909/O8MHNPxxA6bd3TMyaa7x_g/1621206442/
+100% |ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo|   1.2MB 776.2KB/s Time: 00:00:01
 Game installed
 installing game 47747 - Sport Games (Brazil) - Brazil on genesis platform on coolrom repo...
+http://dl.coolrom.com.au/dl/47747/9Ne0wIsVUErFiMNWURrjsQ/1621206445/
+100% |ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| 745.7KB 693.8KB/s Time: 00:00:01
 Game installed
 installing game 5552 - Telebradesco Residencia (Brazil) - Brazil on genesis platform on coolrom repo...
+http://dl.coolrom.com.au/dl/5552/Ne3f6ZBFQSGN-SXMPRWwgw/1621206448/
+100% |ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo|  48.6KB 270.2KB/s Time: 00:00:00
 Game installed
 installing game 5808 - Turma da Monica na Terra dos Monstros (Brazil) - Brazil on genesis platform on coolrom repo...
+http://dl.coolrom.com.au/dl/5808/iOJ8k5sD7SVnbh_FtXyAWQ/1621206450/
+100% |ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| 546.2KB 268.1KB/s Time: 00:00:02
 Game installed
 installing game 48020 - Where in the World Is Carmen Sandiego (Brazil) - Brazil on genesis platform on coolrom repo...
+http://dl.coolrom.com.au/dl/48020/p5HRSrsXvU_3GfO9-C1I0w/1621206453/
+100% |ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| 713.7KB 336.5KB/s Time: 00:00:02
 Game installed
 installing game 47824 - Where in Time Is Carmen Sandiego (Brazil) - Brazil on genesis platform on coolrom repo...
+http://dl.coolrom.com.au/dl/47824/iNkVLfIiFm30d5mPyRIO6g/1621206457/
+100% |ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| 631.7KB 332.4KB/s Time: 00:00:01
 Game installed
 installing game 47770 - Yuu Yuu Hakusho - Sunset Fighters (Brazil) - Brazil on genesis platform on coolrom repo...
+http://dl.coolrom.com.au/dl/47770/lygKB0n14EGKCmQkd_lHuw/1621206460/
+100% |ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo|   1.1MB 345.3KB/s Time: 00:00:03
 Game installed
 ```
 
@@ -313,7 +344,7 @@ Game uninstalled
 Info for game GAME_IDENTIFIER (id/name)
 
 ```
-$ gamerom info --repo coolrom --platform atari2600 adventure
+$ gamerom info -r coolrom -p atari2600 adventure
 showing info for game adventure on atari2600 platform on coolrom repo...
 15913 - Adventure - USA (installed)
 /Users/lucas/.gamerom/games/coolrom/atari2600/USA/Adventure.zip
@@ -324,10 +355,10 @@ showing info for game adventure on atari2600 platform on coolrom repo...
 Update local database
 
 ```
-$ gamerom update_database --repo vimm --platform SNES
-updating SNES platform on vimm repo...
-number a b c d e f g h i j k l m n o p q r s t u v w x y z
-Game database updated for platform SNES on vimm repo
+$ gamerom update_database -r coolrom -p atari2600
+updating atari2600 platform on coolrom repo...
+atari2600:     100% |oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| Time: 00:00:13
+Game database updated for platform atari2600 on coolrom repo
 ```
 
 ### update_all_databases
@@ -335,58 +366,31 @@ Game database updated for platform SNES on vimm repo
 Update all local databases
 
 ```
-$ gamerom update_all_databases -r vimm
-updating Dreamcast platform on vimm repo...
-number a b c d e f g h i j k l m n o p q r s t u v w x y z
-Game database updated for platform Dreamcast on vimm repo
-updating DS platform on vimm repo...
-number a b c d e f g h i j k l m n o p q r s t u v w x y z
-Game database updated for platform DS on vimm repo
-updating GameCube platform on vimm repo...
-number a b c d e f g h i j k l m n o p q r s t u v w x y z
-Game database updated for platform GameCube on vimm repo
-updating GB platform on vimm repo...
-number a b c d e f g h i j k l m n o p q r s t u v w x y z
-Game database updated for platform GB on vimm repo
-updating GBA platform on vimm repo...
-number a b c d e f g h i j k l m n o p q r s t u v w x y z
-Game database updated for platform GBA on vimm repo
-updating GBC platform on vimm repo...
-number a b c d e f g h i j k l m n o p q r s t u v w x y z
-Game database updated for platform GBC on vimm repo
-updating Genesis platform on vimm repo...
-number a b c d e f g h i j k l m n o p q r s t u v w x y z
-Game database updated for platform Genesis on vimm repo
-updating N64 platform on vimm repo...
-number a b c d e f g h i j k l m n o p q r s t u v w x y z
-Game database updated for platform N64 on vimm repo
-updating NES platform on vimm repo...
-number a b c d e f g h i j k l m n o p q r s t u v w x y z
-Game database updated for platform NES on vimm repo
-updating PS1 platform on vimm repo...
-number a b c d e f g h i j k l m n o p q r s t u v w x y z
-Game database updated for platform PS1 on vimm repo
-updating PS2 platform on vimm repo...
-number a b c d e f g h i j k l m n o p q r s t u v w x y z
-Game database updated for platform PS2 on vimm repo
-updating PS3 platform on vimm repo...
-number a b c d e f g h i j k l m n o p q r s t u v w x y z
-Game database updated for platform PS3 on vimm repo
-updating PSP platform on vimm repo...
-number a b c d e f g h i j k l m n o p q r s t u v w x y z
-Game database updated for platform PSP on vimm repo
-updating Saturn platform on vimm repo...
-number a b c d e f g h i j k l m n o p q r s t u v w x y z
-Game database updated for platform Saturn on vimm repo
-updating SNES platform on vimm repo...
-number a b c d e f g h i j k l m n o p q r s t u v w x y z
-Game database updated for platform SNES on vimm repo
-updating Wii platform on vimm repo...
-number a b c d e f g h i j k l m n o p q r s t u v w x y z
-Game database updated for platform Wii on vimm repo
-updating WiiWare platform on vimm repo...
-number a b c d e f g h i j k l m n o p q r s t u v w x y z
-Game database updated for platform WiiWare on vimm repo
+$ gamerom update_all_databases -r coolrom
+updating all databases on coolrom repo...
+atari2600:     100% |oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| Time: 00:00:11
+atari5200:     100% |oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| Time: 00:00:10
+atari7800:     100% |oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| Time: 00:00:10
+atarijaguar:   100% |oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| Time: 00:00:11
+atarilynx:     100% |oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| Time: 00:00:11
+c64:           100% |oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| Time: 00:00:23
+cps1:          100% |oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| Time: 00:00:10
+cps2:          100% |oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| Time: 00:00:11
+mame:          100% |oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| Time: 00:01:20
+namcosystem22: 100% |oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| Time: 00:00:10
+neogeo:        100% |oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| Time: 00:00:11
+neogeocd:      100% |oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| Time: 00:00:11
+neogeopocket:  100% |oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| Time: 00:00:10
+segacd:        100% |oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| Time: 00:00:11
+dc:            100% |oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| Time: 00:00:12
+gamegear:      100% |oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| Time: 00:00:11
+genesis:       100% |oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| Time: 00:00:14
+mastersystem:  100% |oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| Time: 00:00:11
+model2:        100% |oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| Time: 00:00:11
+saturn:        100% |oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| Time: 00:00:11
+psx:           100% |oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| Time: 00:00:21
+ps2:           100% |oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| Time: 00:00:17
+psp:           100% |oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo| Time: 00:00:16
 All game databases updated
 ```
 
