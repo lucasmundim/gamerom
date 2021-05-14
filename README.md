@@ -4,8 +4,9 @@ A command-line installer for game ROMs from many repositories.
 
 It currently supports the following repositories:
 
-  - https://vimm.net/
-  - https://coolrom.com.au/
+  - https://vimm.net
+  - https://coolrom.com.au
+  - https://www.romnation.net
 
 ## Installation
 
@@ -85,6 +86,7 @@ List available repo
 $ gamerom repo
 listing available repo...
 coolrom
+romnation
 vimm
 ```
 
@@ -120,6 +122,46 @@ listing available platforms for coolrom repo...
   psx: Sony Playstation
   ps2: Sony Playstation 2
   psp: Sony Playstation Portable
+```
+
+```
+$ gamerom platforms -r romnation
+listing available platforms for romnation repo...
+---
+:platforms:
+  amstrad: Amstrad
+  atari2600: Atari 2600
+  atari5200: Atari 5200
+  atari7800: Atari 7800
+  atarijaguar: Atari Jaguar
+  atarilynx: Atari Lynx
+  colecovision: ColecoVision
+  commodore64: Commodore 64
+  gamegear: Game Gear
+  gb: Game Boy
+  gbc: Game Boy Color
+  gcdvectrex: Vectrex
+  genesis: Genesis
+  intellivision: Intellivision
+  mame: MAME
+  msx1: MSX
+  msx2: MSX2
+  mtx: MTX
+  n64: N64
+  neogeocd: Neo Geo CD
+  neogeopocket: Neo Geo Pocket
+  nes: NES
+  oric: Oric
+  pce: PC Engine
+  radioshackcolorcomputer: TRS-80
+  samcoupe: SAM Coupé
+  segacd: Sega CD
+  segamastersystem: Master System
+  snes: SNES
+  thompsonmo5: Thomson MO5
+  virtualboy: Virtual Boy
+  watara: Watara Supervision
+  wonderswan: WonderSwan
 ```
 
 ```

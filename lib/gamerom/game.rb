@@ -31,7 +31,11 @@ module Gamerom
     end
 
     def to_s
-      "#{self.id} - #{self.name} - #{self.region}#{self.installed? ? " (#{shell.set_color 'installed', :green})" : ''}"
+      install_status = ''
+      install_status = " (#{shell.set_color 'installed', :green})" if self.installed?
+      tags = ''
+      tags = " - tags: #{self.tags.join(", ")}" if self.respond_to?(:tags) && !self.tags.empty?
+      "#{self.id} - #{self.name} - #{self.region}#{install_status}#{tags}"
     end
 
     def uninstall

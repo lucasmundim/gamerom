@@ -303,10 +303,11 @@ module Gamerom
           game.name,
           game.region,
           game.installed? ? shell.set_color('installed', :green) : '-',
+          game.respond_to?(:tags) ? game.tags.join(", ") : '-'
         ]
       end
       results.sort_by! { |columns| columns[1] }
-      results.unshift ['ID', 'NAME', 'REGION', 'INSTALLED']
+      results.unshift ['ID', 'NAME', 'REGION', 'INSTALLED', 'TAGS']
       shell.print_table(results)
     end
 
