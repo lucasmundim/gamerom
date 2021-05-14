@@ -53,13 +53,12 @@ module Gamerom
       def self.games(platform)
         games = []
         sections = ('a'..'z').to_a.unshift("0")
-
-        sections.each do |section|
+        progress_bar = ProgressBar.new(platform, sections.count)
+        sections.each_with_index do |section, index|
           page = Nokogiri::HTML(RestClient.get("https://www.romnation.net/srv/roms/#{platform}/#{section}/sort-title.html"))
           pages = ['1']
           pages = page.css('.pagination').first.css('a').map(&:text).map(&:strip).reject(&:empty?) unless page.css('.pagination').empty?
           pages.each do |p|
-            print "#{section}#{p} "
             page = Nokogiri::HTML(RestClient.get("https://www.romnation.net/srv/roms/#{platform}/#{section}/page-#{p}_sort-title.html"))
             games.append *page.css('table.listings td.title a').map { |game|
               game_info = GameInfo.new(game.text)
@@ -71,7 +70,9 @@ module Gamerom
               }
             }
           end
+          progress_bar.set(index+1)
         end
+        progress_bar.finish
         games
       end
 

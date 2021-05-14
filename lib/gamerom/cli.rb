@@ -262,11 +262,11 @@ module Gamerom
     desc 'update_all_databases', 'Update all local databases'
     option :repo, :aliases => ['-r'], type: :string, required: true, desc: "Which repo to use", enum: Gamerom::Repo.list.map(&:to_s)
     def update_all_databases
+      puts "updating all databases on #{options[:repo]} repo..."
       repo = Repo.new(options[:repo])
       repo.platforms.keys.each do |platform|
-        a = Gamerom::Cli.new
-        a.options = { platform: platform, repo: options[:repo] }
-        a.update_database
+        repo = Repo.new(options[:repo])
+        repo.update_database platform
       end
       shell.say 'All game databases updated', :green
     rescue => e

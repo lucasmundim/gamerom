@@ -42,9 +42,8 @@ module Gamerom
       def self.games(platform)
         games = []
         sections = ('a'..'z').to_a.unshift("0")
-
-        sections.each do |section|
-          print "#{section} "
+        progress_bar = ProgressBar.new(platform, sections.count)
+        sections.each_with_index do |section, index|
           page = Nokogiri::HTML(RestClient.get("https://coolrom.com.au/roms/#{platform}/#{section}/"))
           regions = page.css('input.region').map { |i| i["name"] }
           regions.each do |region|
@@ -56,7 +55,9 @@ module Gamerom
               }
             }
           end
+          progress_bar.set(index+1)
         end
+        progress_bar.finish
         games
       end
 

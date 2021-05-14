@@ -77,7 +77,6 @@ module Gamerom
 
     def update_database platform
       games = @repo.games platform
-      puts
       FileUtils.mkdir_p("#{Gamerom::CACHE_DIR}/#{@name}")
       File.write("#{Gamerom::CACHE_DIR}/#{@name}/#{platform}.yml", games.to_yaml)
     end

@@ -36,9 +36,8 @@ module Gamerom
       def self.games(platform)
         games = []
         sections = ('a'..'z').to_a.unshift("number")
-
-        sections.each do |section|
-          print "#{section} "
+        progress_bar = ProgressBar.new(platform, sections.count)
+        sections.each_with_index do |section, index|
           page = Nokogiri::HTML(RestClient.get("https://vimm.net/vault/?p=list&system=#{platform}&section=#{section}"))
           games.append *page.css('table.hovertable td:first-child a:first-child').map { |game|
             {
@@ -47,7 +46,9 @@ module Gamerom
               region: 'USA',
             }
           }
+          progress_bar.set(index+1)
         end
+        progress_bar.finish
         games
       end
 
