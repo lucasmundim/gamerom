@@ -40,9 +40,12 @@ module Gamerom
         PLATFORM
       end
 
+      def self.sections
+        ('a'..'z').to_a.unshift('0')
+      end
+
       def self.games(platform)
         games = []
-        sections = ('a'..'z').to_a.unshift('0')
         progress_bar = ProgressBar.new(platform, sections.count)
         sections.each_with_index do |section, index|
           page = Nokogiri::HTML(RestClient.get("https://coolrom.com.au/roms/#{platform}/#{section}/"))

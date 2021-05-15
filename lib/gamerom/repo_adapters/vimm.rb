@@ -34,9 +34,12 @@ module Gamerom
         PLATFORM
       end
 
+      def self.sections
+        ('a'..'z').to_a.unshift('number')
+      end
+
       def self.games(platform)
         games = []
-        sections = ('a'..'z').to_a.unshift('number')
         progress_bar = ProgressBar.new(platform, sections.count)
         sections.each_with_index do |section, index|
           page = Nokogiri::HTML(RestClient.get("https://vimm.net/vault/?p=list&system=#{platform}&section=#{section}"))
