@@ -38,18 +38,12 @@ module Gamerom
         ('a'..'z').to_a.unshift('number')
       end
 
-      def self.games(platform)
-        games = []
-        progress_bar = ProgressBar.new(platform, sections.count)
+      def self.extract_games(platform)
         sections.each_with_index do |section, index|
           page = nokogiri_get("https://vimm.net/vault/?p=list&system=#{platform}&section=#{section}")
-          games.append(*page.css('table.hovertable td:first-child a:first-child').map do |game_link|
-            game(game_link)
-          end)
-          progress_bar.set(index + 1)
+          game_links = page.css('table.hovertable td:first-child a:first-child')
+          yield game_links.map { |game_link| game(game_link) }, index
         end
-        progress_bar.finish
-        games
       end
 
       def self.game(game_link)

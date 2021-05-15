@@ -44,21 +44,15 @@ module Gamerom
         ('a'..'z').to_a.unshift('0')
       end
 
-      def self.games(platform)
-        games = []
-        progress_bar = ProgressBar.new(platform, sections.count)
+      def self.extract_games(platform)
         sections.each_with_index do |section, index|
           page = nokogiri_get("https://coolrom.com.au/roms/#{platform}/#{section}/")
           regions = page.css('input.region').map { |i| i['name'] }
           regions.each do |region|
-            games.append(*page.css("div.#{region} a").map do |game_link|
-              game(game_link, region)
-            end)
+            game_links = page.css("div.#{region} a")
+            yield game_links.map { |game_link| game(game_link, region) }, index
           end
-          progress_bar.set(index + 1)
         end
-        progress_bar.finish
-        games
       end
 
       def self.game(game_link, region)
