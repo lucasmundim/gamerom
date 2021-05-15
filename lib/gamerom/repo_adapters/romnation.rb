@@ -70,13 +70,11 @@ module Gamerom
       end
 
       def self.extract_games_from_section_pages(platform, section, pages)
-        page_games = []
-        pages.each do |p|
+        pages.reduce([]) do |section_games, p|
           page = nokogiri_get("https://www.romnation.net/srv/roms/#{platform}/#{section}/page-#{p}_sort-title.html")
           games_links = page.css('table.listings td.title a')
-          page_games.append(*games_links.map { |game_link| game(game_link) })
+          section_games.append(*games_links.map { |game_link| game(game_link) })
         end
-        page_games
       end
 
       def self.game(game_link)
