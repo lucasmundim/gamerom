@@ -57,15 +57,26 @@ module Gamerom
 
       def self.extract_games(platform)
         sections.each_with_index do |section, index|
-          page = nokogiri_get("https://www.romnation.net/srv/roms/#{platform}/#{section}/sort-title.html")
-          pages = ['1']
-          pages = page.css('.pagination').first.css('a').map(&:text).map(&:strip).reject(&:empty?) unless page.css('.pagination').empty?
-          pages.each do |p|
-            page = nokogiri_get("https://www.romnation.net/srv/roms/#{platform}/#{section}/page-#{p}_sort-title.html")
-            games_links = page.css('table.listings td.title a')
-            yield games_links.map { |game_link| game(game_link) }, index
-          end
+          pages = extract_pages(platform, section)
+          yield extract_games_from_section_pages(platform, section, pages), index
         end
+      end
+
+      def self.extract_pages(platform, section)
+        page = nokogiri_get("https://www.romnation.net/srv/roms/#{platform}/#{section}/sort-title.html")
+        pages = ['1']
+        pages = page.css('.pagination').first.css('a').map(&:text).map(&:strip).reject(&:empty?) unless page.css('.pagination').empty?
+        pages
+      end
+
+      def self.extract_games_from_section_pages(platform, section, pages)
+        page_games = []
+        pages.each do |p|
+          page = nokogiri_get("https://www.romnation.net/srv/roms/#{platform}/#{section}/page-#{p}_sort-title.html")
+          games_links = page.css('table.listings td.title a')
+          page_games.append(*games_links.map { |game_link| game(game_link) })
+        end
+        page_games
       end
 
       def self.game(game_link)
