@@ -6,6 +6,7 @@ REPOSITORIES = Dir["#{File.dirname(__FILE__)}/repo_adapters/*"].map do |file|
   File.basename(file, '.rb')
 end
 
+require_relative 'repo_adapter'
 REPOSITORIES.each do |repo|
   require_relative "repo_adapters/#{repo}"
 end

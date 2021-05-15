@@ -3,13 +3,13 @@
 require 'mechanize'
 require 'mechanize/progressbar'
 require 'mechanizeprogress'
-require 'nokogiri'
-require 'rest-client'
 
 module Gamerom
   module RepoAdapters
     # Vimm - An adapter for the Vimm's Lair repository website
     class Vimm
+      extend Gamerom::RepoAdapter
+
       PLATFORM = {
         'Dreamcast' => 'Dreamcast',
         'DS' => 'Nintendo DS',
@@ -42,7 +42,7 @@ module Gamerom
         games = []
         progress_bar = ProgressBar.new(platform, sections.count)
         sections.each_with_index do |section, index|
-          page = Nokogiri::HTML(RestClient.get("https://vimm.net/vault/?p=list&system=#{platform}&section=#{section}"))
+          page = nokogiri_get("https://vimm.net/vault/?p=list&system=#{platform}&section=#{section}")
           games.append(*page.css('table.hovertable td:first-child a:first-child').map do |game_link|
             game(game_link)
           end)

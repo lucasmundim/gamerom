@@ -4,13 +4,13 @@ require 'cgi'
 require 'mechanize'
 require 'mechanize/progressbar'
 require 'mechanizeprogress'
-require 'nokogiri'
-require 'rest-client'
 
 module Gamerom
   module RepoAdapters
     # Romnation - An adapter for the ROMNation repository website
     class Romnation
+      extend Gamerom::RepoAdapter
+
       PLATFORM = {
         'amstrad' => 'Amstrad',
         'atari2600' => 'Atari 2600',
@@ -59,11 +59,11 @@ module Gamerom
         games = []
         progress_bar = ProgressBar.new(platform, sections.count)
         sections.each_with_index do |section, index|
-          page = Nokogiri::HTML(RestClient.get("https://www.romnation.net/srv/roms/#{platform}/#{section}/sort-title.html"))
+          page = nokogiri_get("https://www.romnation.net/srv/roms/#{platform}/#{section}/sort-title.html")
           pages = ['1']
           pages = page.css('.pagination').first.css('a').map(&:text).map(&:strip).reject(&:empty?) unless page.css('.pagination').empty?
           pages.each do |p|
-            page = Nokogiri::HTML(RestClient.get("https://www.romnation.net/srv/roms/#{platform}/#{section}/page-#{p}_sort-title.html"))
+            page = nokogiri_get("https://www.romnation.net/srv/roms/#{platform}/#{section}/page-#{p}_sort-title.html")
             games.append(*page.css('table.listings td.title a').map do |game_link|
               game(game_link)
             end)

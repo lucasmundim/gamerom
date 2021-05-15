@@ -3,13 +3,13 @@
 require 'mechanize'
 require 'mechanize/progressbar'
 require 'mechanizeprogress'
-require 'nokogiri'
-require 'rest-client'
 
 module Gamerom
   module RepoAdapters
     # Coolrom - An adapter for the CoolROM repository website
     class Coolrom
+      extend Gamerom::RepoAdapter
+
       PLATFORM = {
         'atari2600' => 'Atari 2600',
         'atari5200' => 'Atari 5200',
@@ -48,7 +48,7 @@ module Gamerom
         games = []
         progress_bar = ProgressBar.new(platform, sections.count)
         sections.each_with_index do |section, index|
-          page = Nokogiri::HTML(RestClient.get("https://coolrom.com.au/roms/#{platform}/#{section}/"))
+          page = nokogiri_get("https://coolrom.com.au/roms/#{platform}/#{section}/")
           regions = page.css('input.region').map { |i| i['name'] }
           regions.each do |region|
             games.append(*page.css("div.#{region} a").map do |game_link|
