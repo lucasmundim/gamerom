@@ -8,6 +8,7 @@ require 'rest-client'
 
 module Gamerom
   module RepoAdapters
+    # Coolrom - An adapter for the CoolROM repository website
     class Coolrom
       PLATFORM = {
         'atari2600' => 'Atari 2600',
@@ -33,7 +34,7 @@ module Gamerom
         'psx' => 'Sony Playstation',
         'ps2' => 'Sony Playstation 2',
         'psp' => 'Sony Playstation Portable',
-      }
+      }.freeze
 
       def self.platforms
         PLATFORM
@@ -41,21 +42,21 @@ module Gamerom
 
       def self.games(platform)
         games = []
-        sections = ('a'..'z').to_a.unshift("0")
+        sections = ('a'..'z').to_a.unshift('0')
         progress_bar = ProgressBar.new(platform, sections.count)
         sections.each_with_index do |section, index|
           page = Nokogiri::HTML(RestClient.get("https://coolrom.com.au/roms/#{platform}/#{section}/"))
-          regions = page.css('input.region').map { |i| i["name"] }
+          regions = page.css('input.region').map { |i| i['name'] }
           regions.each do |region|
-            games.append *page.css("div.#{region} a").map { |game|
+            games.append(*page.css("div.#{region} a").map do |game|
               {
                 id: game['href'].split('/')[3].to_i,
                 name: game.text,
                 region: region,
               }
-            }
+            end)
           end
-          progress_bar.set(index+1)
+          progress_bar.set(index + 1)
         end
         progress_bar.finish
         games
@@ -67,15 +68,16 @@ module Gamerom
         agent.user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
 
         response = nil
-        agent.progressbar{
+        agent.progressbar do
           response = agent.get("https://coolrom.com.au/downloader.php?id=#{game.id}")
-        }
-        if response.code.to_i == 200
-          filename = response.filename
-          FileUtils.mkdir_p(game.filepath)
-          response.save!("#{game.filepath}/#{filename}")
-          yield [filename]
         end
+
+        return unless response.code.to_i == 200
+
+        filename = response.filename
+        FileUtils.mkdir_p(game.filepath)
+        response.save!("#{game.filepath}/#{filename}")
+        yield [filename]
       end
     end
   end

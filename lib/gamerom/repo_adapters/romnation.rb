@@ -9,6 +9,7 @@ require 'rest-client'
 
 module Gamerom
   module RepoAdapters
+    # Romnation - An adapter for the ROMNation repository website
     class Romnation
       PLATFORM = {
         'amstrad' => 'Amstrad',
@@ -44,7 +45,7 @@ module Gamerom
         'virtualboy' => 'Virtual Boy',
         'watara' => 'Watara Supervision',
         'wonderswan' => 'WonderSwan',
-      }
+      }.freeze
 
       def self.platforms
         PLATFORM
@@ -52,7 +53,7 @@ module Gamerom
 
       def self.games(platform)
         games = []
-        sections = ('a'..'z').to_a.unshift("0")
+        sections = ('a'..'z').to_a.unshift('0')
         progress_bar = ProgressBar.new(platform, sections.count)
         sections.each_with_index do |section, index|
           page = Nokogiri::HTML(RestClient.get("https://www.romnation.net/srv/roms/#{platform}/#{section}/sort-title.html"))
@@ -60,7 +61,7 @@ module Gamerom
           pages = page.css('.pagination').first.css('a').map(&:text).map(&:strip).reject(&:empty?) unless page.css('.pagination').empty?
           pages.each do |p|
             page = Nokogiri::HTML(RestClient.get("https://www.romnation.net/srv/roms/#{platform}/#{section}/page-#{p}_sort-title.html"))
-            games.append *page.css('table.listings td.title a').map { |game|
+            games.append(*page.css('table.listings td.title a').map do |game|
               game_info = GameInfo.new(game.text)
               {
                 id: game['href'].split('/')[3].to_i,
@@ -68,9 +69,9 @@ module Gamerom
                 region: game_info.region,
                 tags: game_info.tags,
               }
-            }
+            end)
           end
-          progress_bar.set(index+1)
+          progress_bar.set(index + 1)
         end
         progress_bar.finish
         games
@@ -83,15 +84,16 @@ module Gamerom
         page = agent.get("https://www.romnation.net/download/rom/#{game.id}")
 
         response = nil
-        agent.progressbar{
-          response = page.link_with(:text => 'Download This Rom').click
-        }
-        if response.code.to_i == 200
-          filename = CGI.unescape(response.filename.split('_host=').first)
-          FileUtils.mkdir_p(game.filepath)
-          response.save!("#{game.filepath}/#{filename}")
-          yield [filename]
+        agent.progressbar do
+          response = page.link_with(text: 'Download This Rom').click
         end
+
+        return unless response.code.to_i == 200
+
+        filename = CGI.unescape(response.filename.split('_host=').first)
+        FileUtils.mkdir_p(game.filepath)
+        response.save!("#{game.filepath}/#{filename}")
+        yield [filename]
       end
     end
   end
