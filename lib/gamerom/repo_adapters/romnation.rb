@@ -4,12 +4,13 @@ require 'cgi'
 require 'mechanize'
 require 'mechanize/progressbar'
 require 'mechanizeprogress'
-require 'nokogiri'
-require 'rest-client'
 
 module Gamerom
   module RepoAdapters
+    # Romnation - An adapter for the ROMNation repository website
     class Romnation
+      extend Gamerom::RepoAdapter
+
       PLATFORM = {
         'amstrad' => 'Amstrad',
         'atari2600' => 'Atari 2600',
@@ -44,36 +45,46 @@ module Gamerom
         'virtualboy' => 'Virtual Boy',
         'watara' => 'Watara Supervision',
         'wonderswan' => 'WonderSwan',
-      }
+      }.freeze
 
       def self.platforms
         PLATFORM
       end
 
-      def self.games(platform)
-        games = []
-        sections = ('a'..'z').to_a.unshift("0")
-        progress_bar = ProgressBar.new(platform, sections.count)
+      def self.sections
+        ('a'..'z').to_a.unshift('0')
+      end
+
+      def self.extract_games(platform)
         sections.each_with_index do |section, index|
-          page = Nokogiri::HTML(RestClient.get("https://www.romnation.net/srv/roms/#{platform}/#{section}/sort-title.html"))
-          pages = ['1']
-          pages = page.css('.pagination').first.css('a').map(&:text).map(&:strip).reject(&:empty?) unless page.css('.pagination').empty?
-          pages.each do |p|
-            page = Nokogiri::HTML(RestClient.get("https://www.romnation.net/srv/roms/#{platform}/#{section}/page-#{p}_sort-title.html"))
-            games.append *page.css('table.listings td.title a').map { |game|
-              game_info = GameInfo.new(game.text)
-              {
-                id: game['href'].split('/')[3].to_i,
-                name: game.text,
-                region: game_info.region,
-                tags: game_info.tags,
-              }
-            }
-          end
-          progress_bar.set(index+1)
+          pages = extract_pages(platform, section)
+          yield extract_games_from_section_pages(platform, section, pages), index
         end
-        progress_bar.finish
-        games
+      end
+
+      def self.extract_pages(platform, section)
+        page = nokogiri_get("https://www.romnation.net/srv/roms/#{platform}/#{section}/sort-title.html")
+        pages = ['1']
+        pages = page.css('.pagination').first.css('a').map(&:text).map(&:strip).reject(&:empty?) unless page.css('.pagination').empty?
+        pages
+      end
+
+      def self.extract_games_from_section_pages(platform, section, pages)
+        pages.reduce([]) do |section_games, p|
+          page = nokogiri_get("https://www.romnation.net/srv/roms/#{platform}/#{section}/page-#{p}_sort-title.html")
+          games_links = page.css('table.listings td.title a')
+          section_games.append(*games_links.map { |game_link| game(game_link) })
+        end
+      end
+
+      def self.game(game_link)
+        game_info = GameInfo.new(game_link.text)
+        {
+          id: game_link['href'].split('/')[3].to_i,
+          name: game_link.text,
+          region: game_info.region,
+          tags: game_info.tags,
+        }
       end
 
       def self.install(game)
@@ -83,15 +94,16 @@ module Gamerom
         page = agent.get("https://www.romnation.net/download/rom/#{game.id}")
 
         response = nil
-        agent.progressbar{
-          response = page.link_with(:text => 'Download This Rom').click
-        }
-        if response.code.to_i == 200
-          filename = CGI.unescape(response.filename.split('_host=').first)
-          FileUtils.mkdir_p(game.filepath)
-          response.save!("#{game.filepath}/#{filename}")
-          yield [filename]
+        agent.progressbar do
+          response = page.link_with(text: 'Download This Rom').click
         end
+
+        return unless response.code.to_i == 200
+
+        filename = CGI.unescape(response.filename.split('_host=').first)
+        FileUtils.mkdir_p(game.filepath)
+        response.save!("#{game.filepath}/#{filename}")
+        yield [filename]
       end
     end
   end

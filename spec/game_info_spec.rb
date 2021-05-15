@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe Gamerom::GameInfo do
-  it "has a name" do
-    name = "rom name"
+  it 'has a name' do
+    name = 'rom name'
     game_info = Gamerom::GameInfo.new(name)
     expect(game_info.name).to eq(name)
   end
 
-  it "extracts region from name" do
+  it 'extracts region from name' do
     {
       '(1)' => 'Japan & Korea',
       '(4)' => 'USA & Brazil - NTSC',
@@ -39,7 +39,7 @@ RSpec.describe Gamerom::GameInfo do
       '(S)' => 'Spain',
       '(Sw)' => 'Sweden',
       '(SW)' => 'Sweden',
-      '(U)' => "USA",
+      '(U)' => 'USA',
       '(UK)' => 'England',
       '(Unk)' => 'Unknown Country',
       '(Unl)' => 'Unlicensed',
@@ -52,32 +52,31 @@ RSpec.describe Gamerom::GameInfo do
     end
   end
 
-  it "extracts tags from name" do
+  it 'extracts tags from name' do
     {
-      "[!]" => [:good],
-      "[!p]" => [:pending],
-      "[a]" => [:alternate],
-      "[b]" => [:bad],
-      "[BF]" => [:bung],
-      "[c]" => [:checksum],
-      "[C]" => [:color],
-      "[f]" => [:fixed],
-      "[h]" => [:hack],
-      "[J]" => [:japanese_translation],
-      "[o]" => [:overdump],
-      "[p]" => [:pirate],
-      "[PC10]" => [:pc10],
-      "[S]" => [:super],
-      "[T-]" => [:old_translation],
-      "[t]" => [:trained],
-      "[T+]" => [:newer_translation],
-      "[VS]" => [:vs],
-      "[x]" => [:bad_checksum],
-      "[!][J][C]" => [:good, :japanese_translation, :color],
+      '[!]' => [:good],
+      '[!p]' => [:pending],
+      '[a]' => [:alternate],
+      '[b]' => [:bad],
+      '[BF]' => [:bung],
+      '[c]' => [:checksum],
+      '[C]' => [:color],
+      '[f]' => [:fixed],
+      '[h]' => [:hack],
+      '[J]' => [:japanese_translation],
+      '[o]' => [:overdump],
+      '[p]' => [:pirate],
+      '[PC10]' => [:pc10],
+      '[S]' => [:super],
+      '[T-]' => [:old_translation],
+      '[t]' => [:trained],
+      '[T+]' => [:newer_translation],
+      '[VS]' => [:vs],
+      '[x]' => [:bad_checksum],
+      '[!][J][C]' => %i[good japanese_translation color],
     }.each do |name, expected_tags|
       game_info = Gamerom::GameInfo.new(name)
       expect(game_info.tags).to eq(expected_tags)
     end
   end
-
 end

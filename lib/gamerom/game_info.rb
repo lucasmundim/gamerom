@@ -1,6 +1,7 @@
-# 'frozen_string_literal' => true
+# frozen_string_literal: true
 
 module Gamerom
+  # GameInfo - Extracts region and tags from game name
   class GameInfo
     REGIONS = {
       '1' => 'Japan & Korea',
@@ -33,13 +34,13 @@ module Gamerom
       'S' => 'Spain',
       'Sw' => 'Sweden',
       'SW' => 'Sweden',
-      'U' => "USA",
+      'U' => 'USA',
       'UK' => 'England',
       'Unk' => 'Unknown Country',
       'Unl' => 'Unlicensed',
       'PAL' => 'PAL regions (Australia, Europe)',
       'NTSC' => 'NTSC regions (Japan, USA, Latin America)',
-    }
+    }.freeze
 
     TAGS = {
       '!' => :good,
@@ -61,14 +62,12 @@ module Gamerom
       'T+' => :newer_translation,
       'VS' => :vs,
       'x' => :bad_checksum,
-    }
+    }.freeze
+
+    attr_reader :name
 
     def initialize(name)
       @name = name
-    end
-
-    def name
-      @name
     end
 
     def region
@@ -77,7 +76,7 @@ module Gamerom
       if region_id
         REGIONS[region_id]
       else
-        "USA"
+        'USA'
       end
     end
 
@@ -85,7 +84,7 @@ module Gamerom
       tags = []
       codes = @name.scan(/\[(?<code>[^\]]+)\]/).flatten
       codes.each do |code|
-        code = $1 if code.match /^(?<code>[abcfhop])[0-9]*/
+        code = Regexp.last_match(1) if code.match /^(?<code>[abcfhop])[0-9]*/
         tags << TAGS[code] if TAGS.include?(code)
       end
       tags
