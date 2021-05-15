@@ -29,9 +29,15 @@ Metrics/AbcSize:
 
 Metrics/CyclomaticComplexity:
   Enabled: true
+  Exclude:
+    - 'lib/mechanizeprogress.rb'
 
 Metrics/PerceivedComplexity:
-  Enabled: false
+  Enabled: true
+  Exclude:
+    - 'lib/mechanizeprogress.rb'
 
 Style/SoleNestedConditional:
-  Enabled: false
+  Enabled: true
+  Exclude:
+    - 'lib/mechanizeprogress.rb'
