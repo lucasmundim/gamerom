@@ -51,18 +51,22 @@ module Gamerom
           page = Nokogiri::HTML(RestClient.get("https://coolrom.com.au/roms/#{platform}/#{section}/"))
           regions = page.css('input.region').map { |i| i['name'] }
           regions.each do |region|
-            games.append(*page.css("div.#{region} a").map do |game|
-              {
-                id: game['href'].split('/')[3].to_i,
-                name: game.text,
-                region: region,
-              }
+            games.append(*page.css("div.#{region} a").map do |game_link|
+              game(game_link, region)
             end)
           end
           progress_bar.set(index + 1)
         end
         progress_bar.finish
         games
+      end
+
+      def self.game(game_link, region)
+        {
+          id: game_link['href'].split('/')[3].to_i,
+          name: game_link.text,
+          region: region,
+        }
       end
 
       def self.install(game)

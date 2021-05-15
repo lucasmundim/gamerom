@@ -43,17 +43,21 @@ module Gamerom
         progress_bar = ProgressBar.new(platform, sections.count)
         sections.each_with_index do |section, index|
           page = Nokogiri::HTML(RestClient.get("https://vimm.net/vault/?p=list&system=#{platform}&section=#{section}"))
-          games.append(*page.css('table.hovertable td:first-child a:first-child').map do |game|
-            {
-              id: game['href'].split('/').last.to_i,
-              name: game.text,
-              region: 'USA',
-            }
+          games.append(*page.css('table.hovertable td:first-child a:first-child').map do |game_link|
+            game(game_link)
           end)
           progress_bar.set(index + 1)
         end
         progress_bar.finish
         games
+      end
+
+      def self.game(game_link)
+        {
+          id: game_link['href'].split('/').last.to_i,
+          name: game_link.text,
+          region: 'USA',
+        }
       end
 
       def self.install(game)

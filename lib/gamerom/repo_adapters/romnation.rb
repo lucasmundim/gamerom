@@ -64,20 +64,24 @@ module Gamerom
           pages = page.css('.pagination').first.css('a').map(&:text).map(&:strip).reject(&:empty?) unless page.css('.pagination').empty?
           pages.each do |p|
             page = Nokogiri::HTML(RestClient.get("https://www.romnation.net/srv/roms/#{platform}/#{section}/page-#{p}_sort-title.html"))
-            games.append(*page.css('table.listings td.title a').map do |game|
-              game_info = GameInfo.new(game.text)
-              {
-                id: game['href'].split('/')[3].to_i,
-                name: game.text,
-                region: game_info.region,
-                tags: game_info.tags,
-              }
+            games.append(*page.css('table.listings td.title a').map do |game_link|
+              game(game_link)
             end)
           end
           progress_bar.set(index + 1)
         end
         progress_bar.finish
         games
+      end
+
+      def self.game(game_link)
+        game_info = GameInfo.new(game_link.text)
+        {
+          id: game_link['href'].split('/')[3].to_i,
+          name: game_link.text,
+          region: game_info.region,
+          tags: game_info.tags,
+        }
       end
 
       def self.install(game)
