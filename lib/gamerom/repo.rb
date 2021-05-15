@@ -48,13 +48,13 @@ module Gamerom
       end
 
       unless options[:region].nil?
-        games = games.select do |game|
-          options[:region].nil? || game.region == options[:region]
+        games.select! do |game|
+          game.region == options[:region]
         end
       end
 
       unless options[:keyword].nil?
-        games = games.select do |game|
+        games.select! do |game|
           game.name =~ /#{options[:keyword]}/i
         end
       end
