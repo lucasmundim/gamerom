@@ -30,9 +30,12 @@ module Gamerom
       validate_platform repo, options[:platform]
       puts "showing info for game #{game_identifier} on #{options[:platform]} platform on #{options[:repo]} repo..."
       game = repo.find(options[:platform], game_identifier)
-      shell.say "Game #{game_identifier} not found", :red if game.nil?
-      puts game
-      puts game.filenames if game.installed?
+      if !game.nil?
+        puts game
+        puts game.filenames if game.installed?
+      else
+        shell.say "Game #{game_identifier} not found", :red
+      end
     rescue StandardError => e
       render_error e, options
       exit 1
