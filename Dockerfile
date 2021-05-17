@@ -1,4 +1,4 @@
-FROM ruby:3.0.0-alpine as build
+FROM ruby:3.0.1-alpine as build
 
 RUN apk add --no-cache --virtual .build-deps \
   build-base \

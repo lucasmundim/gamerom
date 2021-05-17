@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.description   = 'A command-line installer for game ROMs from many repositories.'
   spec.homepage      = 'https://github.com/lucasmundim/gamerom'
   spec.license       = 'MIT'
-  spec.required_ruby_version = Gem::Requirement.new('>= 3.0.0')
+  spec.required_ruby_version = Gem::Requirement.new('>= 3.0.1')
 
   spec.metadata['allowed_push_host'] = 'https://rubygems.org'
 
