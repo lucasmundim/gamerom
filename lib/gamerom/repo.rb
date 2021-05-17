@@ -33,7 +33,7 @@ module Gamerom
 
     def find(platform, game_identifier)
       games(platform).find do |game|
-        if Float(game_identifier, exception: false)
+        if Integer(game_identifier, exception: false)
           game.id == game_identifier.to_i
         else
           game.name.downcase == game_identifier.downcase
