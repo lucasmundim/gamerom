@@ -165,12 +165,19 @@ module Gamerom
     option :repo, aliases: ['-r'], type: :string, required: true, desc: 'Which repo to use', enum: Gamerom::Repo.list.map(&:to_s)
     option :platform, aliases: ['-p'], type: :string, required: true, desc: 'Which platform to use'
     option :region, aliases: ['-g'], type: :string, required: false, desc: 'Only from specified region'
+    option :install, aliases: ['-I'], type: :boolean, required: false, desc: 'Install search results'
     def search(keyword)
       repo = Repo.new(options[:repo])
       validate_platform repo, options[:platform]
       puts "searching available games for #{options[:platform]} platform on #{options[:repo]} repo..."
       games = repo.games options[:platform], region: options[:region], keyword: keyword
-      print_game_table(games)
+      if options[:install]
+        games.each do |game|
+          install(game.id) unless game.installed?
+        end
+      else
+        print_game_table(games)
+      end
     rescue StandardError => e
       render_error e, options
       exit 1
