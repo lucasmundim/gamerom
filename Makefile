@@ -1,4 +1,4 @@
-VERSION:=$(shell cat lib/gamerom/version.rb |grep VERSION|cut -d\" -f2)
+VERSION:=$(shell cat lib/gamerom/version.rb |grep VERSION|cut -d\' -f2)
 IMAGE=lucasmundim/gamerom:${VERSION}
 DOCKER_OPTS=--rm -it -v ${HOME}/.gamerom:/root/.gamerom ${IMAGE}
 LOCAL_VOLUME_OPTS=-v ${CURDIR}:/app
