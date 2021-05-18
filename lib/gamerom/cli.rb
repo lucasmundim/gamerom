@@ -25,7 +25,8 @@ module Gamerom
     desc 'info GAME_IDENTIFIER', 'Info for game GAME_IDENTIFIER (id/name)'
     option :repo, aliases: ['-r'], type: :string, required: true, desc: 'Which repo to use', enum: Gamerom::Repo.list.map(&:to_s)
     option :platform, aliases: ['-p'], type: :string, required: true, desc: 'Which platform to use'
-    def info(game_identifier)
+    def info(*args)
+      game_identifier = args.join(' ')
       repo = Repo.new(options[:repo])
       validate_platform repo, options[:platform]
       puts "showing info for game #{game_identifier} on #{options[:platform]} platform on #{options[:repo]} repo..."
@@ -44,7 +45,8 @@ module Gamerom
     desc 'install GAME_IDENTIFIER', 'Install game GAME_IDENTIFIER (id/name)'
     option :repo, aliases: ['-r'], type: :string, required: true, desc: 'Which repo to use', enum: Gamerom::Repo.list.map(&:to_s)
     option :platform, aliases: ['-p'], type: :string, required: true, desc: 'Which platform to use'
-    def install(game_identifier)
+    def install(*args)
+      game_identifier = args.join(' ')
       repo = Repo.new(options[:repo])
       validate_platform repo, options[:platform]
       game = repo.find(options[:platform], game_identifier)
@@ -166,7 +168,8 @@ module Gamerom
     option :platform, aliases: ['-p'], type: :string, required: true, desc: 'Which platform to use'
     option :region, aliases: ['-g'], type: :string, required: false, desc: 'Only from specified region'
     option :install, aliases: ['-I'], type: :boolean, required: false, desc: 'Install search results'
-    def search(keyword)
+    def search(*args)
+      keyword = args.join(' ')
       repo = Repo.new(options[:repo])
       validate_platform repo, options[:platform]
       puts "searching available games for #{options[:platform]} platform on #{options[:repo]} repo..."
@@ -231,7 +234,8 @@ module Gamerom
     desc 'uninstall GAME_IDENTIFIER', 'Uninstall game GAME_IDENTIFIER (id/name)'
     option :repo, aliases: ['-r'], type: :string, required: true, desc: 'Which repo to use', enum: Gamerom::Repo.list.map(&:to_s)
     option :platform, aliases: ['-p'], type: :string, required: true, desc: 'Which platform to use'
-    def uninstall(game_identifier)
+    def uninstall(*args)
+      game_identifier = args.join(' ')
       repo = Repo.new(options[:repo])
       validate_platform repo, options[:platform]
       game = repo.find(options[:platform], game_identifier)
