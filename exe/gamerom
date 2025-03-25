@@ -3,4 +3,20 @@
 
 require 'gamerom'
 
+def shut_down
+  puts "\nShutting down gracefully..."
+end
+
+# Trap ^C
+Signal.trap('INT') do
+  shut_down
+  exit
+end
+
+# Trap `Kill `
+Signal.trap('TERM') do
+  shut_down
+  exit
+end
+
 Gamerom::Cli.start(ARGV)
