@@ -74,7 +74,7 @@ module Gamerom
         agent.pluggable_parser.default = Mechanize::Download
         agent.user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
         page = agent.get("https://vimm.net/vault/#{game.id}")
-        form = page.form_with(id: 'download_form')
+        form = page.form_with(id: 'dl_form')
 
         filenames = []
         game_files = []
