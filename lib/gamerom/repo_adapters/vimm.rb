@@ -11,6 +11,10 @@ module Gamerom
       extend Gamerom::RepoAdapter
 
       PLATFORM = {
+        '32X' => 'Sega 32X',
+        'Atari2600' => 'Atari 2600',
+        'Atari5200' => 'Atari 5200',
+        'Atari7800' => 'Atari 7800',
         'Dreamcast' => 'Dreamcast',
         'DS' => 'Nintendo DS',
         'GameCube' => 'GameCube',
@@ -18,6 +22,8 @@ module Gamerom
         'GBA' => 'Game Boy Advance',
         'GBC' => 'Game Boy Color',
         'Genesis' => 'Genesis',
+        'GG' => 'Game Gear',
+        'Lynx' => 'Lynx',
         'N64' => 'Nintendo 64',
         'NES' => 'Nintendo',
         'PS1' => 'PlayStation',
@@ -25,9 +31,16 @@ module Gamerom
         'PS3' => 'PlayStation 3',
         'PSP' => 'PlayStation Portable',
         'Saturn' => 'Saturn',
+        'SegaCD' => 'Sega CD',
+        'SMS' => 'Master System',
         'SNES' => 'Super Nintendo',
+        'TG16' => 'TurboGrafx-16',
+        'TGCD' => 'TurboGrafx-CD',
+        'VB' => 'Virtual Boy',
         'Wii' => 'Wii',
         'WiiWare' => 'WiiWare',
+        'Xbox' => 'Xbox',
+        'Xbox360' => 'Xbox 360',
       }.freeze
 
       def self.platforms
