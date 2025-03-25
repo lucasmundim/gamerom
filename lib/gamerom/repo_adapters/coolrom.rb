@@ -33,6 +33,7 @@ module Gamerom
         'saturn' => 'Sega Saturn',
         'psx' => 'Sony Playstation',
         'ps2' => 'Sony Playstation 2',
+        'ps3' => 'Sony Playstation 3',
         'psp' => 'Sony Playstation Portable',
       }.freeze
 
