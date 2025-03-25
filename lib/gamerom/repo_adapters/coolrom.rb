@@ -48,10 +48,12 @@ module Gamerom
         sections.each_with_index do |section, index|
           page = nokogiri_get("https://coolrom.com.au/roms/#{platform}/#{section}/")
           regions = page.css('input.region').map { |i| i['name'] }
+          game_links = []
           regions.each do |region|
-            game_links = page.css("div.#{region} a")
-            yield game_links.map { |game_link| game(game_link, region) }, index
+            region_game_links = page.css("div.#{region} a")
+            game_links.append(*region_game_links.map { |game_link| game(game_link, region) })
           end
+          yield game_links, index
         end
       end
 
