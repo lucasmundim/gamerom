@@ -46,3 +46,35 @@ class Mechanize
     end
   end
 end
+
+class MechanizeProgressBar
+  def inc(step)
+    @progressbar.progress = @progressbar.progress + step if @progressbar
+  end
+
+  def progressbar_new(pbar_opts, request, response)
+    out = pbar_opts[:out] || pbar_opts[:output] || $stderr
+    format = pbar_opts[:format] || "%j%% %b\e[0;93m\u{15E7}\e[0m%i Progress: %c/%C  %a %e  Speed: %rKB/sec %t"
+    if pbar_opts[:single] then
+      title = pbar_opts[:title] || request['Host']
+    else
+      title = pbar_opts[:title] || ""
+      out.print "#{pbar_opts[:title]||uri(request)}\n"
+    end
+    total = pbar_opts[:total] || filesize(response)
+    pbar_class = pbar_opts[:reversed] ? ReversedProgressBar : ProgressBar
+
+    progressbar = pbar_class.create(
+      title: title,
+      total: total,
+      output: out,
+      length: 120,
+      format: format,
+      rate_scale: lambda { |rate| rate / 1024 },
+      progress_mark: ' ',
+      remainder_mark: "\e[0;34m\u{FF65}\e[0m",
+    )
+
+    progressbar
+  end
+end
