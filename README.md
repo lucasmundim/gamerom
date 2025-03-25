@@ -14,7 +14,7 @@ It currently supports the following repositories:
 Add this to your .bashrc, .bash_aliases, etc:
 
 ```
-alias gamerom="docker run -e UID=$(id -u) -e GROUP_ID=$(id -g) --rm -it -v ~/.gamerom:/home/runuser/.gamerom docker.io/lucasmundim/gamerom:0.4.1"
+alias gamerom="docker run -e UID=$(id -u) -e GROUP_ID=$(id -g) --rm -it -v ~/.gamerom:/home/runuser/.gamerom --platform=linux/amd64 docker.io/lucasmundim/gamerom:0.4.1"
 ```
 
 Use it as:
