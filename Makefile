@@ -1,6 +1,6 @@
-VERSION:=$(shell cat lib/gamerom/version.rb |grep VERSION|cut -d\' -f2)
-IMAGE=lucasmundim/gamerom:${VERSION}
-DOCKER_OPTS=--rm -it -v ${HOME}/.gamerom:/root/.gamerom ${IMAGE}
+VERSION?=$(shell cat lib/gamerom/version.rb |grep VERSION|cut -d\' -f2)
+IMAGE?=lucasmundim/gamerom:${VERSION}
+DOCKER_OPTS=-e UID=$(shell id -u) -e GROUP_ID=$(shell id -g) --rm -it -v ${HOME}/.gamerom:/root/.gamerom --platform=linux/amd64 ${IMAGE}
 LOCAL_VOLUME_OPTS=-v ${CURDIR}:/app
 DOCKER_DEVELOPMENT_OPTS=${LOCAL_VOLUME_OPTS} --entrypoint '' ${DOCKER_OPTS}
 
@@ -8,7 +8,7 @@ version:
 	@echo ${VERSION}
 
 build:
-	@docker build -t ${IMAGE} .
+	@docker build --platform=linux/amd64 -t ${IMAGE} .
 
 console:
 	@docker run ${DOCKER_DEVELOPMENT_OPTS} ./bin/console
