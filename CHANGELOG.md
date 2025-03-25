@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2025-03-25
+- feat: add ps3 platform for coolrom repo
+- feat: add new platforms for vimm repo (Sega 32X, Atari 2600, Atari 5200, Atari 7800, Game Gear, Lynx, Sega CD, Master System, TurboGrafx-16, TurboGrafx-CD, Virtual Boy, XBox, XBox 360)
+- feat: remove deprecated romnation repo
+- feat: use ruby 3.4.2 and update all dependencies
+- feat: format progress bars (colored pacman style)
+- feat: handle SIGINT and SIGTERM
+- fix: vimm repo game install
+- fix: coolrom repo broken progress
+- fix: vimm repo unable to get local issuer
+- fix: vimm repo update datase (404 not found)
+
 ## [0.4.1] - 2021-05-18
 - Enables specifying game identifier without using quotes
 
@@ -34,7 +46,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2021-05-07
 - Initial release
 
-[Unreleased]: https://github.com/lucasmundim/gamerom/compare/v0.4.1...HEAD
+[Unreleased]: https://github.com/lucasmundim/gamerom/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/lucasmundim/gamerom/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/lucasmundim/gamerom/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/lucasmundim/gamerom/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/lucasmundim/gamerom/compare/v0.2.2...v0.3.0
