@@ -12,14 +12,13 @@ module Gamerom
 
     def games(platform)
       games = []
-      progress_bar = ProgressBar.new(platform, sections.count)
+      progress_bar = ProgressBar.create(title: platform, total: sections.count, autofinish: true)
 
       extract_games(platform) do |section_games, section_index|
         games.append(*section_games)
-        progress_bar.set(section_index + 1)
+        progress_bar.progress = section_index + 1
       end
 
-      progress_bar.finish
       games
     end
   end
