@@ -6,7 +6,6 @@ It currently supports the following repositories:
 
   - https://vimm.net
   - https://coolrom.com.au
-  - https://www.romnation.net
 
 ## Installation
 
@@ -86,7 +85,6 @@ List available repo
 $ gamerom repo
 listing available repo...
 coolrom
-romnation
 vimm
 ```
 
@@ -122,46 +120,6 @@ listing available platforms for coolrom repo...
   psx: Sony Playstation
   ps2: Sony Playstation 2
   psp: Sony Playstation Portable
-```
-
-```
-$ gamerom platforms -r romnation
-listing available platforms for romnation repo...
----
-:platforms:
-  amstrad: Amstrad
-  atari2600: Atari 2600
-  atari5200: Atari 5200
-  atari7800: Atari 7800
-  atarijaguar: Atari Jaguar
-  atarilynx: Atari Lynx
-  colecovision: ColecoVision
-  commodore64: Commodore 64
-  gamegear: Game Gear
-  gb: Game Boy
-  gbc: Game Boy Color
-  gcdvectrex: Vectrex
-  genesis: Genesis
-  intellivision: Intellivision
-  mame: MAME
-  msx1: MSX
-  msx2: MSX2
-  mtx: MTX
-  n64: N64
-  neogeocd: Neo Geo CD
-  neogeopocket: Neo Geo Pocket
-  nes: NES
-  oric: Oric
-  pce: PC Engine
-  radioshackcolorcomputer: TRS-80
-  samcoupe: SAM Coupé
-  segacd: Sega CD
-  segamastersystem: Master System
-  snes: SNES
-  thompsonmo5: Thomson MO5
-  virtualboy: Virtual Boy
-  watara: Watara Supervision
-  wonderswan: WonderSwan
 ```
 
 ```
@@ -214,12 +172,19 @@ ID     NAME                               REGION  INSTALLED  TAGS
 Search games by KEYWORD
 
 ```
-$ gamerom search -r romnation -p segamastersystem "Alex Kidd in Shinobi World"
-searching available games for segamastersystem platform on romnation repo...
-ID     NAME                                  REGION  INSTALLED  TAGS
-39126  Alex Kidd in Shinobi World (UE) [!]   USA     -          good
-39127  Alex Kidd in Shinobi World (UE) [b1]  USA     -          bad
-39128  Alex Kidd in Shinobi World (UE) [b2]  USA     -          bad
+$ gamerom search -r vimm -p segamastersystem "Alex Kidd in Shinobi World"
+$ bundle exec gamerom search --repo vimm --platform SMS "Alex Kidd"
+searching available games for SMS platform on vimm repo...
+ID     NAME                                           REGION  INSTALLED  TAGS
+83680  Alex Kidd in Miracle World                     USA     -          -
+83681  Alex Kidd in Miracle World                     USA     -          -
+83682  Alex Kidd in Miracle World (Sega Ages)         USA     -          -
+83682  Alex Kidd in Miracle World (Sega Ages)         USA     -          -
+83684  Alex Kidd in Shinobi World                     USA     -          -
+83671  Alex Kidd: High-Tech World                     USA     -          -
+83673  Alex Kidd: The Lost Stars                      USA     -          -
+83630  [BIOS] Alex Kidd in Miracle World              USA     -          -
+83631  [BIOS] Alex Kidd in Miracle World (Sega Ages)  USA     -          -
 ```
 
 ### regions
