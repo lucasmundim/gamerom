@@ -1,4 +1,4 @@
-FROM ruby:3.0.1-alpine as build
+FROM ruby:3.0.1-alpine
 
 RUN apk add --no-cache --virtual .build-deps \
   build-base \
@@ -10,7 +10,7 @@ RUN bundle config --global frozen 1
 RUN mkdir -p /bundle && chmod 777 /bundle
 
 ENV GEM_HOME="/bundle"
-ENV PATH $GEM_HOME/bin:$GEM_HOME/gems/bin:$PATH
+ENV PATH=$GEM_HOME/bin:$GEM_HOME/gems/bin:$PATH
 
 RUN mkdir -p /app
 WORKDIR /app
