@@ -31,11 +31,11 @@ module Gamerom
       validate_platform repo, options[:platform]
       puts "showing info for game #{game_identifier} on #{options[:platform]} platform on #{options[:repo]} repo..."
       game = repo.find(options[:platform], game_identifier)
-      if !game.nil?
+      if game.nil?
+        shell.say "Game #{game_identifier} not found", :red
+      else
         puts game
         puts game.filenames if game.installed?
-      else
-        shell.say "Game #{game_identifier} not found", :red
       end
     rescue StandardError => e
       render_error e, options
@@ -308,10 +308,8 @@ module Gamerom
     private
 
     def print_game_table(games)
-      results = []
-
-      games.each do |game|
-        results << [
+      results = games.map do |game|
+        [
           game.id,
           game.name,
           game.region,

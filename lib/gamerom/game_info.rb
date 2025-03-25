@@ -84,7 +84,7 @@ module Gamerom
       tags = []
       codes = @name.scan(/\[(?<code>[^\]]+)\]/).flatten
       codes.each do |code|
-        code = Regexp.last_match(1) if code.match /^(?<code>[abcfhop])[0-9]*/
+        code = Regexp.last_match(1) if code.match(/^(?<code>[abcfhop])[0-9]*/)
         tags << TAGS[code] if TAGS.include?(code)
       end
       tags

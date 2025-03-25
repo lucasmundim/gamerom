@@ -100,6 +100,12 @@ GEM
       unicode-display_width (>= 2.4.0, < 4.0)
     rubocop-ast (1.41.0)
       parser (>= 3.3.7.2)
+    rubocop-rake (0.7.1)
+      lint_roller (~> 1.1)
+      rubocop (>= 1.72.1)
+    rubocop-rspec (3.5.0)
+      lint_roller (~> 1.1)
+      rubocop (~> 1.72, >= 1.72.1)
     ruby-progressbar (1.13.0)
     rubyntlm (0.6.5)
       base64
@@ -121,6 +127,8 @@ DEPENDENCIES
   rake (~> 13.2.1)
   rspec (~> 3.13.0)
   rubocop (~> 1.74.0)
+  rubocop-rake (~> 0.7.1)
+  rubocop-rspec (~> 3.5.0)
 
 BUNDLED WITH
    2.6.2

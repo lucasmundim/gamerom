@@ -31,11 +31,11 @@ class Mechanize
         log.debug("Read #{total} bytes total") if log && !mpbar.suppress_logger? # (7of7)a
 
         raise Mechanize::ResponseCodeError, response if
-          Net::HTTPUnknownResponse == response
+          response == Net::HTTPUnknownResponse
 
         content_length = response.content_length
 
-        unless Net::HTTP::Head == request || Net::HTTPRedirection == response
+        unless request == Net::HTTP::Head || response == Net::HTTPRedirection
           if content_length && content_length != body_io.length
             raise EOFError, "Content-Length (#{content_length}) does not match response body length (#{body_io.length})"
           end
@@ -47,6 +47,7 @@ class Mechanize
   end
 end
 
+# MechanizeProgressBar - A Monkeypatch for the mechanize progressbar
 class MechanizeProgressBar
   def inc(step)
     @progressbar.progress = @progressbar.progress + step if @progressbar
@@ -55,26 +56,24 @@ class MechanizeProgressBar
   def progressbar_new(pbar_opts, request, response)
     out = pbar_opts[:out] || pbar_opts[:output] || $stderr
     format = pbar_opts[:format] || "%j%% %b\e[0;93m\u{15E7}\e[0m%i Progress: %c/%C  %a %e  Speed: %rKB/sec %t"
-    if pbar_opts[:single] then
+    if pbar_opts[:single]
       title = pbar_opts[:title] || request['Host']
     else
-      title = pbar_opts[:title] || ""
-      out.print "#{pbar_opts[:title]||uri(request)}\n"
+      title = pbar_opts[:title] || ''
+      out.print "#{pbar_opts[:title] || uri(request)}\n"
     end
     total = pbar_opts[:total] || filesize(response)
     pbar_class = pbar_opts[:reversed] ? ReversedProgressBar : ProgressBar
 
-    progressbar = pbar_class.create(
+    pbar_class.create(
       title: title,
       total: total,
       output: out,
       length: 120,
       format: format,
-      rate_scale: lambda { |rate| rate / 1024 },
+      rate_scale: ->(rate) { rate / 1024 },
       progress_mark: ' ',
-      remainder_mark: "\e[0;34m\u{FF65}\e[0m",
+      remainder_mark: "\e[0;34m\u{FF65}\e[0m"
     )
-
-    progressbar
   end
 end

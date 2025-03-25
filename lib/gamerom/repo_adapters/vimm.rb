@@ -57,6 +57,7 @@ module Gamerom
           game_links = page.css('table.hovertable td:first-child a:first-child')
           yield game_links.map { |game_link| game(game_link) }, index
         rescue RestClient::NotFound
+          yield [], index
         end
       end
 

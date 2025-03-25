@@ -27,8 +27,8 @@ module Gamerom
       @repo = Gamerom::RepoAdapters.const_get(name.capitalize)
     end
 
-    def install(game, &block)
-      @repo.install game, &block
+    def install(game, &)
+      @repo.install game, &
     end
 
     def find(platform, game_identifier)

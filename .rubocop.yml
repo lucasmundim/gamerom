@@ -41,3 +41,7 @@ Style/SoleNestedConditional:
   Enabled: true
   Exclude:
     - 'lib/mechanizeprogress.rb'
+
+plugins:
+  - rubocop-rake
+  - rubocop-rspec
