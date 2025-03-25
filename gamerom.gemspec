@@ -29,13 +29,13 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_runtime_dependency 'mechanize', '~> 2.14.0'
-  spec.add_runtime_dependency 'mechanize-progressbar', '~> 0.2.0'
-  spec.add_runtime_dependency 'nokogiri', '~> 1.18.5'
-  spec.add_runtime_dependency 'ostruct', '~> 0.6.1'
-  spec.add_runtime_dependency 'progressbar', '~> 1.13.0'
-  spec.add_runtime_dependency 'rest-client', '~> 2.1.0'
-  spec.add_runtime_dependency 'thor', '~> 1.3.2'
+  spec.add_dependency 'mechanize', '~> 2.14.0'
+  spec.add_dependency 'mechanize-progressbar', '~> 0.2.0'
+  spec.add_dependency 'nokogiri', '~> 1.18.5'
+  spec.add_dependency 'ostruct', '~> 0.6.1'
+  spec.add_dependency 'progressbar', '~> 1.13.0'
+  spec.add_dependency 'rest-client', '~> 2.1.0'
+  spec.add_dependency 'thor', '~> 1.3.2'
 
   # For more information and examples about making a new gem, checkout our
   # guide at: https://bundler.io/guides/creating_gem.html
