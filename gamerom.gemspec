@@ -33,7 +33,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'mechanize', '~> 2.14.0'
   spec.add_dependency 'mechanize-progressbar', '~> 0.2.0'
   spec.add_dependency 'nokogiri', '~> 1.18.5'
-  spec.add_dependency 'ostruct', '~> 0.6.1'
   spec.add_dependency 'progressbar', '~> 1.13.0'
   spec.add_dependency 'rest-client', '~> 2.1.0'
   spec.add_dependency 'thor', '~> 1.3.2'

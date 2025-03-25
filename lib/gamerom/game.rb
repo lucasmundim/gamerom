@@ -1,12 +1,20 @@
 # frozen_string_literal: true
 
 require 'fileutils'
-require 'ostruct'
 require 'yaml'
 
 module Gamerom
   # Game - Represents a game ROM
-  class Game < OpenStruct
+  class Game
+    attr_accessor :id, :name, :platform, :region, :repo, :tags
+
+    def initialize(attributes = {})
+      @tags = []
+      attributes.each do |key, value|
+        instance_variable_set("@#{key}", value)
+      end
+    end
+
     def filenames
       YAML.load_file(state_filename).map do |filename|
         "#{filepath}/#{filename}"
