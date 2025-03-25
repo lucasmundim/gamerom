@@ -43,6 +43,7 @@ module Gamerom
           page = nokogiri_get("https://vimm.net/vault/?p=list&system=#{platform}&section=#{section}")
           game_links = page.css('table.hovertable td:first-child a:first-child')
           yield game_links.map { |game_link| game(game_link) }, index
+        rescue RestClient::NotFound
         end
       end
 
