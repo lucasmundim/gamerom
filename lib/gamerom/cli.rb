@@ -124,13 +124,14 @@ module Gamerom
       games = repo.games options[:platform]
       games_not_found = []
       games_found = []
+      games_already_installed = []
       games.each do |game|
         puts
         puts "Checking game #{game}"
         if game.filenames.any?
           filename = game.filenames.first
           puts "#{shell.set_color('*', :green)} Found game at: #{filename}"
-          games_found << game.name
+          games_already_installed << game.name
           next
         end
         
@@ -172,6 +173,7 @@ module Gamerom
       
       if games_not_found.count.positive?
         puts "#{shell.set_color(games_found.count, :green)} games found"
+        puts "#{shell.set_color(games_already_installed.count, :yellow)} games already installed"
         puts "#{shell.set_color(games_not_found.count, :red)} games not found"
       else
         puts "All #{games_found.count} games found"
