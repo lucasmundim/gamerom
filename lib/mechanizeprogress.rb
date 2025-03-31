@@ -65,11 +65,14 @@ class MechanizeProgressBar
     total = pbar_opts[:total] || filesize(response)
     pbar_class = pbar_opts[:reversed] ? ReversedProgressBar : ProgressBar
 
+    columns = `tput cols`.to_i
+    length = [120, columns].min
+
     pbar_class.create(
       title: title,
       total: total,
       output: out,
-      length: 120,
+      length: length,
       format: format,
       rate_scale: ->(rate) { rate / 1024 },
       progress_mark: ' ',

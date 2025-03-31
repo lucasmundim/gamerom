@@ -12,11 +12,15 @@ module Gamerom
 
     def games(platform)
       games = []
+
+      columns = `tput cols`.to_i
+      length = [120, columns].min
+
       progress_bar = ProgressBar.create(
         title: platform,
         total: sections.count,
         autofinish: true,
-        length: 80,
+        length: length,
         format: "%t: %b\e[0;93m\u{15E7}\e[0m%i %j%% %e",
         progress_mark: ' ',
         remainder_mark: "\e[0;34m\u{FF65}\e[0m"
