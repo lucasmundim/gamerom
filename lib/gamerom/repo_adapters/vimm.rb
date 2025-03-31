@@ -79,13 +79,31 @@ module Gamerom
 
         filenames = []
         game_files = []
-        multiple_disks = page.css('#download_disc_number')
 
-        if multiple_disks.empty?
-          game_files << { id: form['mediaId'], name: 'single file rom' }
+        # Extract media IDs from the JavaScript allMedia constant
+        all_media_js = page.body.match(/const allMedia=(\[.*?\]);/m)
+
+        if all_media_js
+          # Parse the JSON array from the JavaScript code
+          require 'json'
+          begin
+            all_media = JSON.parse(all_media_js[1])
+            if all_media.any?
+              puts 'multiple discs detected' if all_media.size > 1
+              game_files.concat(all_media.map do |media|
+                # Base64 decode the GoodTitle to get a readable name
+                title = media['GoodTitle'] ? Base64.decode64(media['GoodTitle']) : 'Disc'
+                { id: media['ID'].to_s, name: title }
+              end)
+            end
+          rescue JSON::ParserError => e
+            puts "Error parsing media data: #{e.message}"
+            # Fallback to using the form's mediaId
+            game_files << { id: form['mediaId'], name: 'single file rom' }
+          end
         else
-          puts 'multiple discs detected'
-          game_files.concat(multiple_disks.children[1..-2].map { |disk| { name: disk.text, id: disk['value'] } })
+          # Fallback to using the form's mediaId if allMedia not found
+          game_files << { id: form['mediaId'], name: 'single file rom' }
         end
 
         game_files.each do |game_file|
