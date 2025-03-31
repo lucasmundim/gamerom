@@ -16,7 +16,10 @@ module Gamerom
     end
 
     def filenames
-      YAML.load_file(state_filename).map do |filename|
+      unless File.exist? state_filename
+        return []
+      end
+      Array(YAML.load_file(state_filename)).map do |filename|
         "#{filepath}/#{filename}"
       end
     end
