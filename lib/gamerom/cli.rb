@@ -75,7 +75,11 @@ module Gamerom
       validate_platform repo, options[:platform]
       games = repo.games options[:platform], region: options[:region]
       games.each do |game|
-        install(game.id) unless game.installed?
+        if game.installed?
+          shell.say "Game #{game.name} already installed", :yellow
+          next
+        end
+        install(game.id)
       end
     rescue StandardError => e
       render_error e, options
