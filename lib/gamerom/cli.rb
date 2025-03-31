@@ -80,6 +80,8 @@ module Gamerom
           next
         end
         install(game.id)
+      rescue Exception => e
+        shell.say "Error installing game #{game.name}: #{e.message}", :red
       end
     rescue StandardError => e
       render_error e, options
