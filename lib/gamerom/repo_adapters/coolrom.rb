@@ -81,6 +81,7 @@ module Gamerom
         filename = response.filename
         FileUtils.mkdir_p(game.filepath)
         response.save!("#{game.filepath}/#{filename}")
+        puts "Downloaded: #{filename}"
         yield [filename]
       end
     end

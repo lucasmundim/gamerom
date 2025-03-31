@@ -103,6 +103,7 @@ module Gamerom
           filename = response.filename
           response.save!("#{game.filepath}/#{filename}")
           filenames << filename
+          puts "Downloaded: #{filename}"
         end
         yield filenames
       end
