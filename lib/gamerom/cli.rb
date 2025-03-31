@@ -157,12 +157,30 @@ module Gamerom
           "#{game_path}/#{escaped_original}*"
         ]
 
-        game_file = patterns.map { |pattern| Dir.glob(pattern).first }.compact.first
+        game_files = []
+        patterns.each do |pattern|
+          matches = Dir.glob(pattern)
+          game_files.concat(matches) if matches.any?
+        end
+        game_files.uniq! # Remove any duplicates
         
-        if game_file
-          filename = game_file
-          game.update_state File.basename(filename)
-          puts "#{shell.set_color('*', :green)} Found game at: #{filename}"
+        if game_files.any?
+          # Sort files to ensure consistent order (important for multi-disk games)
+          game_files.sort!
+          
+          # Extract basenames for state storage
+          filenames = game_files.map { |file| File.basename(file) }
+          
+          # Update game state with all found files
+          game.update_state filenames
+          
+          if game_files.size > 1
+            puts "#{shell.set_color('*', :green)} Found #{game_files.size} disks for game:"
+            game_files.each { |file| puts "  - #{file}" }
+          else
+            puts "#{shell.set_color('*', :green)} Found game at: #{game_files.first}"
+          end
+          
           games_found << original_name
         else
           puts "#{shell.set_color('*', :red)} not found using patterns:"
