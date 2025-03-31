@@ -123,24 +123,58 @@ module Gamerom
       puts "recovering state of roms for #{options[:platform]} platform on #{options[:repo]} repo..."
       games = repo.games options[:platform]
       games_not_found = []
+      games_found = []
       games.each do |game|
-        filename = nil
-        basename = "#{Gamerom::GAME_DIR}/#{repo.name}/#{options[:platform]}/#{game[:region]}/#{game[:name]}"
-        %w[zip 7z rar].each do |ext|
-          fullname = "#{basename}.#{ext}"
-          filename = fullname if File.exist? fullname
+        puts
+        puts "Checking game #{game}"
+        if game.filenames.any?
+          filename = game.filenames.first
+          puts "#{shell.set_color('*', :green)} Found game at: #{filename}"
+          games_found << game.name
+          next
+        end
+        
+        game_path = "#{Gamerom::GAME_DIR}/#{repo.name}/#{options[:platform]}/#{game.region}"
+        original_name = game.name
+        underscored_name = original_name.tr(" ", "_")
+
+        glob_escape = lambda do |str, spacer = ' '|
+          str.
+          gsub(/([\\\[\]\*\?\{\}\)\ ,])/, '\\\\\1').
+          gsub(/:/, "#{spacer}-").
+          gsub(/!/, '\!*').
+          gsub(/\(/, '*\(')
         end
 
-        if filename
+        # Escape both variants for glob
+        escaped_original = glob_escape.call(original_name)
+        escaped_underscored = glob_escape.call(underscored_name, '_')
+
+        # Try both patterns
+        patterns = [
+          "#{game_path}/#{escaped_underscored}*",
+          "#{game_path}/#{escaped_original}*"
+        ]
+
+        game_file = patterns.map { |pattern| Dir.glob(pattern).first }.compact.first
+        
+        if game_file
+          filename = game_file
           game.update_state File.basename(filename)
-          puts "Found game #{game[:name]}"
+          puts "#{shell.set_color('*', :green)} Found game at: #{filename}"
+          games_found << original_name
         else
-          games_not_found << game[:name]
+          puts "#{shell.set_color('*', :red)} not found using patterns:"
+          patterns.each { |p| puts "  #{p}" }
+          games_not_found << original_name
         end
       end
+      
       if games_not_found.count.positive?
-        puts 'Games not found:'
-        puts games_not_found
+        puts "#{shell.set_color(games_found.count, :green)} games found"
+        puts "#{shell.set_color(games_not_found.count, :red)} games not found"
+      else
+        puts "All #{games_found.count} games found"
       end
     rescue StandardError => e
       puts e.message
