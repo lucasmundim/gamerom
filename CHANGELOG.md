@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - feat: recover - do not claim files that belong to a game with a longer name (e.g. "Kung-Fu" vs "Kung-Fu Master")
 - feat: use ruby 3.4.12 and update all dependencies
 - fix: install_all - Ctrl-C stops the loop again
-- known issue: vimm repo game downloads are blocked by a Cloudflare challenge; listing still works
+- feat: vimm repo - the site now blocks automated downloads, so install shows the game page URL and the target directory for a manual download; database, search and recover keep working
 
 ## [0.5.0] - 2025-03-25
 - feat: add ps3 platform for coolrom repo

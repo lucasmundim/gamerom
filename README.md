@@ -6,7 +6,7 @@ It currently supports the following repositories:
 
   - https://coolrom.com.au
   - https://edgeemu.net
-  - https://vimm.net (listing only: game downloads are currently blocked by a Cloudflare challenge)
+  - https://vimm.net (search and database only: downloads must be done manually, see `install` below)
 
 ## Installation
 
@@ -269,12 +269,23 @@ USA
 Install game GAME_IDENTIFIER (id/name)
 
 ```
+$ gamerom install -r edgeemu -p rca-studioii 'Pinball (Europe)'
+installing game 2675927342 - Pinball (Europe) - Europe on rca-studioii platform on edgeemu repo...
+100% |ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo|  1.1KB  12.3KB/s Time: 00:00:00
+Downloaded: Pinball (Europe).zip
+Game installed
+```
+
+The vimm repo does not allow automated downloads, so `install` tells you where to
+download the game and where to save it. Run `recover` afterwards to register it:
+
+```
 $ gamerom install -r vimm -p NES 'Mega Man'
 installing game 545 - Mega Man - USA on NES platform on vimm repo...
-downloading single file rom
-http://download4.vimm.net/download/?mediaId=530
-100% |ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo|  74.8KB  46.3KB/s Time: 00:00:01
-Game installed
+vimm.net does not allow automated downloads.
+Download the game from https://vimm.net/vault/545 in your browser and save it to:
+  /home/user/.gamerom/games/vimm/NES/USA/
+Then run `gamerom recover -r vimm -p NES` to register it.
 ```
 
 ### install_all

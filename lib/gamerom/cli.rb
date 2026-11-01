@@ -61,6 +61,8 @@ module Gamerom
       end
       game.install
       shell.say 'Game installed', :green
+    rescue Gamerom::ManualDownloadRequired => e
+      shell.say e.message, :yellow
     rescue StandardError => e
       render_error e, options
       exit 1

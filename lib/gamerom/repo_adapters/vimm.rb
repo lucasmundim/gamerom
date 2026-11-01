@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
-require 'base64'
-require 'json'
-require 'mechanize'
-require 'mechanize/progressbar'
-require 'mechanizeprogress'
+require 'fileutils'
 
 module Gamerom
   module RepoAdapters
@@ -71,54 +67,20 @@ module Gamerom
         }
       end
 
+      # Vimm's Lair protects game pages with a browser challenge, so games have to be
+      # downloaded by hand. Prepare the target directory and tell the user what to do.
       def self.install(game)
         FileUtils.mkdir_p(game.filepath)
-        agent = Mechanize.new
-        agent.pluggable_parser.default = Mechanize::Download
-        agent.user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
-        page = agent.get("https://vimm.net/vault/#{game.id}")
-        form = page.form_with(id: 'dl_form')
-
-        filenames = []
-        media_files(page, form).each do |media_file|
-          puts "downloading #{media_file[:name]}"
-          form.method = 'GET'
-          button = form.button_with(type: 'submit')
-          response = nil
-          form['mediaId'] = media_file[:id]
-          agent.progressbar do
-            response = form.click_button(button)
-          end
-
-          break unless response.code.to_i == 200
-
-          filename = response.filename
-          response.save!("#{game.filepath}/#{filename}")
-          filenames << filename
-          puts "Downloaded: #{filename}"
-        end
-        yield filenames
+        raise Gamerom::ManualDownloadRequired, <<~MSG
+          vimm.net does not allow automated downloads.
+          Download the game from #{game_url(game)} in your browser and save it to:
+            #{game.filepath}/
+          Then run `gamerom recover -r vimm -p #{game.platform}` to register it.
+        MSG
       end
 
-      # Multi-disc games list every disc in the JavaScript `allMedia` constant;
-      # fall back to the form's mediaId when it is missing or unparseable.
-      def self.media_files(page, form)
-        single_file = [{ id: form['mediaId'], name: 'single file rom' }]
-        all_media_js = page.body.match(/const allMedia=(\[.*?\]);/m)
-        return single_file unless all_media_js
-
-        all_media = JSON.parse(all_media_js[1])
-        return single_file if all_media.empty?
-
-        puts 'multiple discs detected' if all_media.size > 1
-        all_media.map do |media|
-          # GoodTitle is base64 encoded
-          title = media['GoodTitle'] ? Base64.decode64(media['GoodTitle']) : 'Disc'
-          { id: media['ID'].to_s, name: title }
-        end
-      rescue JSON::ParserError => e
-        puts "Error parsing media data: #{e.message}"
-        single_file
+      def self.game_url(game)
+        "https://vimm.net/vault/#{game.id}"
       end
     end
   end
