@@ -57,17 +57,20 @@ RSpec.describe Gamerom::RepoAdapters::Vimm do
     let(:games) do
       [].tap { |list| described_class.extract_games('N64') { |section_games, _index| list.concat(section_games) } }
     end
+    let(:expected) do
+      [
+        { id: 2640, name: 'Mace: The Dark Age', region: 'USA' },
+        { id: 2641, name: 'Madden Football 64', region: 'USA' },
+        { id: 2642, name: 'Old Entry', region: 'USA' },
+        { id: 2643, name: 'Euro Only', region: 'Europe' },
+        { id: 2644, name: 'Japan and Europe', region: 'Japan' }
+      ]
+    end
 
     before { allow(described_class).to receive_messages(sections: ['m'], nokogiri_get: page) }
 
     it 'extracts one game per row, preferring USA among the region flags' do
-      expect(games).to eq([
-                            { id: 2640, name: 'Mace: The Dark Age', region: 'USA' },
-                            { id: 2641, name: 'Madden Football 64', region: 'USA' },
-                            { id: 2642, name: 'Old Entry', region: 'USA' },
-                            { id: 2643, name: 'Euro Only', region: 'Europe' },
-                            { id: 2644, name: 'Japan and Europe', region: 'Japan' }
-                          ])
+      expect(games).to eq(expected)
     end
   end
 end
