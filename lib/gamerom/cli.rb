@@ -124,8 +124,8 @@ module Gamerom
       validate_platform repo, options[:platform]
       puts "recovering state of roms for #{options[:platform]} platform on #{options[:repo]} repo..."
       games = repo.games options[:platform]
-      game_names = games.to_h { |game| [game.id, game.name] }
-      results = games.group_by { |game| recover_game(game, game_names) }
+      parsed_names = games.to_h { |game| [game.id, parse_rom_name(game.name)] }
+      results = games.group_by { |game| recover_game(game, parsed_names) }
 
       print_recover_summary(results.fetch(:found, []), results.fetch(:already_installed, []), results.fetch(:not_found, []))
     rescue StandardError => e
@@ -335,7 +335,7 @@ module Gamerom
 
     # Recover helpers
 
-    def recover_game(game, game_names)
+    def recover_game(game, parsed_names)
       puts
       puts "Checking game #{game}"
       if game.filenames.any?
@@ -343,7 +343,7 @@ module Gamerom
         return :already_installed
       end
 
-      game_files = glob_game_files(game).select { |file| file_belongs_to_game?(file, game, game_names) }.sort
+      game_files = glob_game_files(game).select { |file| file_belongs_to_game?(file, game, parsed_names) }.sort
       if game_files.empty?
         puts "#{shell.set_color("*", :red)} not found"
         return :not_found
@@ -370,59 +370,29 @@ module Gamerom
         .gsub('(', '*\(')
     end
 
-    # A globbed file is kept for a game unless it is a better match for another
-    # game whose name starts with this game's name (e.g. "Kung-Fu" vs "Kung-Fu Master").
-    def file_belongs_to_game?(file, game, game_names)
-      filename = File.basename(file).downcase
-      return true if exact_filename_match?(filename, game.name.downcase)
+    # A globbed file belongs to a game when, ignoring case and punctuation, the file name
+    # without its tags equals the game name without its tags, and every tag in the game
+    # name is present in the file. Among games with the same base name the one whose tags
+    # match the file best wins, so "Mega Man 2 (Capcom Town)" takes
+    # "Mega_Man_2_(USA)_(Capcom_Town).zip" and plain "Mega Man 2" leaves it alone.
+    def file_belongs_to_game?(file, game, parsed_names)
+      base, tags = parse_rom_name(File.basename(file).sub(/(\.[A-Za-z0-9]{1,5})+\z/, ''))
+      name_base, name_tags = parsed_names[game.id]
+      return false unless base == name_base && (name_tags - tags).empty?
 
-      number = sequel_number(game.name)
-      return true if number && filename.include?(number)
-      return true if game.name.include?('Limited Run Games') && filename.include?('limited_run')
-
-      !claimed_by_other_game?(filename, game, game_names)
-    end
-
-    # "Game.zip", "Game_Name.zip" or "Game (USA).zip"
-    def exact_filename_match?(filename, name)
-      [name, name.tr(' ', '_')].any? do |variant|
-        filename.match?(/\A#{Regexp.escape(variant)}(\s*\(\w+\))?\.\w+\z/i)
+      parsed_names.none? do |other_id, (other_base, other_tags)|
+        other_id != game.id && other_base == base && (other_tags - tags).empty? && other_tags.size > name_tags.size
       end
     end
 
-    # The number that identifies a sequel, e.g. "2" in "Tony Hawk's Pro Skater 2"
-    def sequel_number(name)
-      match = name.match(/(\d+|\s+\d+)[\s':]/) || name.match(/\s(\d+)$/)
-      match && match[1].strip
+    # "Legend of Zelda, The: Ocarina of Time (USA) (GameCube)" => ["legendofzeldatheocarinaoftime", ["usa", "gamecube"]]
+    def parse_rom_name(str)
+      tags = str.scan(/[(\[]([^)\]]+)[)\]]/).flatten.map { |tag| normalize_rom_name(tag) }
+      [normalize_rom_name(str.gsub(/[(\[][^)\]]*[)\]]/, '')), tags]
     end
 
-    def claimed_by_other_game?(filename, game, game_names)
-      name = game.name.downcase
-      game_names.any? do |other_id, other_name|
-        next false if other_id == game.id
-
-        other = other_name.downcase
-        next false unless other.length > name.length && other.start_with?(name)
-
-        filename_matches_other_game?(filename, other_name)
-      end
-    end
-
-    # Downloaded file names replace ":" with " -" (or "_-") and may use "_" for spaces,
-    # so "South Park: Chef's Luv Shack" is stored as "South_Park_-_Chef's_Luv_Shack".
-    def name_variants(name)
-      spaced = name.downcase.gsub(':', ' -')
-      [name.downcase, name.downcase.tr(' ', '_'), spaced, spaced.tr(' ', '_')].uniq
-    end
-
-    def filename_matches_other_game?(filename, other_name)
-      variants = name_variants(other_name)
-      return false unless variants.any? { |variant| filename.include?(variant) }
-
-      number = sequel_number(other_name)
-      return filename.include?(number) if number
-
-      variants.any? { |variant| filename.start_with?(variant) }
+    def normalize_rom_name(str)
+      str.downcase.gsub(/[^a-z0-9]/, '')
     end
 
     def print_recovered_files(game_files)
