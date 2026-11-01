@@ -2,12 +2,26 @@
 
 require 'nokogiri'
 require 'rest-client'
+require 'uri'
 
 module Gamerom
   # RepoAdapter - Common adapter methods
   module RepoAdapter
+    MAX_RETRIES = 5
+
+    # Sites rate limit the section crawl; honor the Retry-After of a 429 instead of failing.
     def nokogiri_get(url)
-      Nokogiri::HTML(RestClient.get(url))
+      retries = 0
+      loop do
+        return Nokogiri::HTML(RestClient.get(url))
+      rescue RestClient::TooManyRequests => e
+        retries += 1
+        raise if retries > MAX_RETRIES
+
+        delay = (e.response.headers[:retry_after] || 60).to_i
+        puts "\nrate limited by #{URI.parse(url).host}, retrying in #{delay}s (#{retries}/#{MAX_RETRIES})"
+        sleep delay
+      end
     end
 
     def games(platform)

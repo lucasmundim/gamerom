@@ -268,11 +268,19 @@ module Gamerom
     def update_all_databases
       puts "updating all databases on #{options[:repo]} repo..."
       repo = Repo.new(options[:repo])
-      repo.platforms.each_key do |platform|
-        repo = Repo.new(options[:repo])
+      failed = repo.platforms.keys.reject do |platform|
         repo.update_database platform
+        true
+      rescue StandardError => e
+        shell.say "Error updating #{platform}: #{e.message}", :red
+        false
       end
-      shell.say 'All game databases updated', :green
+      if failed.empty?
+        shell.say 'All game databases updated', :green
+      else
+        shell.say "Failed to update: #{failed.join(", ")}", :red
+        exit 1
+      end
     rescue StandardError => e
       render_error e, options
       exit 1
