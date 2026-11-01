@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'base64'
+require 'json'
 require 'mechanize'
 require 'mechanize/progressbar'
 require 'mechanizeprogress'
@@ -78,40 +80,12 @@ module Gamerom
         form = page.form_with(id: 'dl_form')
 
         filenames = []
-        game_files = []
-
-        # Extract media IDs from the JavaScript allMedia constant
-        all_media_js = page.body.match(/const allMedia=(\[.*?\]);/m)
-
-        if all_media_js
-          # Parse the JSON array from the JavaScript code
-          require 'json'
-          begin
-            all_media = JSON.parse(all_media_js[1])
-            if all_media.any?
-              puts 'multiple discs detected' if all_media.size > 1
-              game_files.concat(all_media.map do |media|
-                # Base64 decode the GoodTitle to get a readable name
-                title = media['GoodTitle'] ? Base64.decode64(media['GoodTitle']) : 'Disc'
-                { id: media['ID'].to_s, name: title }
-              end)
-            end
-          rescue JSON::ParserError => e
-            puts "Error parsing media data: #{e.message}"
-            # Fallback to using the form's mediaId
-            game_files << { id: form['mediaId'], name: 'single file rom' }
-          end
-        else
-          # Fallback to using the form's mediaId if allMedia not found
-          game_files << { id: form['mediaId'], name: 'single file rom' }
-        end
-
-        game_files.each do |game_file|
-          puts "downloading #{game_file[:name]}"
+        media_files(page, form).each do |media_file|
+          puts "downloading #{media_file[:name]}"
           form.method = 'GET'
           button = form.button_with(type: 'submit')
           response = nil
-          form['mediaId'] = game_file[:id]
+          form['mediaId'] = media_file[:id]
           agent.progressbar do
             response = form.click_button(button)
           end
@@ -124,6 +98,27 @@ module Gamerom
           puts "Downloaded: #{filename}"
         end
         yield filenames
+      end
+
+      # Multi-disc games list every disc in the JavaScript `allMedia` constant;
+      # fall back to the form's mediaId when it is missing or unparseable.
+      def self.media_files(page, form)
+        single_file = [{ id: form['mediaId'], name: 'single file rom' }]
+        all_media_js = page.body.match(/const allMedia=(\[.*?\]);/m)
+        return single_file unless all_media_js
+
+        all_media = JSON.parse(all_media_js[1])
+        return single_file if all_media.empty?
+
+        puts 'multiple discs detected' if all_media.size > 1
+        all_media.map do |media|
+          # GoodTitle is base64 encoded
+          title = media['GoodTitle'] ? Base64.decode64(media['GoodTitle']) : 'Disc'
+          { id: media['ID'].to_s, name: title }
+        end
+      rescue JSON::ParserError => e
+        puts "Error parsing media data: #{e.message}"
+        single_file
       end
     end
   end

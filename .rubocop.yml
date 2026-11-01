@@ -42,6 +42,11 @@ Style/SoleNestedConditional:
   Exclude:
     - 'lib/mechanizeprogress.rb'
 
+# mechanizeprogress.rb monkeypatches two existing classes on purpose
+Style/OneClassPerFile:
+  Exclude:
+    - 'lib/mechanizeprogress.rb'
+
 plugins:
   - rubocop-rake
   - rubocop-rspec

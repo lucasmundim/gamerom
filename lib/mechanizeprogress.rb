@@ -3,6 +3,7 @@
 # Mechanize - A Monkeypatch for the mechanize progressbar
 class Mechanize
   include MechanizeProgressBarAPI # (1of7)a
+
   class HTTP
     # Agent - A Monkeypatch for the mechanize progressbar
     class Agent
