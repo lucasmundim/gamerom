@@ -6,7 +6,7 @@ require 'yaml'
 module Gamerom
   # Game - Represents a game ROM
   class Game
-    attr_accessor :id, :name, :platform, :region, :repo, :tags
+    attr_accessor :id, :name, :platform, :region, :repo, :tags, :url
 
     def initialize(attributes = {})
       @tags = []

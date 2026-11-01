@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- feat: add edgeemu repo (https://edgeemu.net), 48 platforms
+- feat: recover - do not claim files that belong to a game with a longer name (e.g. "Kung-Fu" vs "Kung-Fu Master")
+- feat: use ruby 3.4.12 and update all dependencies
+- fix: install_all - Ctrl-C stops the loop again
+- known issue: vimm repo game downloads are blocked by a Cloudflare challenge; listing still works
 
 ## [0.5.0] - 2025-03-25
 - feat: add ps3 platform for coolrom repo
