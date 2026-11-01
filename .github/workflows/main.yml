@@ -10,9 +10,9 @@ jobs:
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.4.2
+        ruby-version: 3.4.12
     - name: Run the default task
       run: |
-        gem install bundler -v 2.6.2
+        gem install bundler -v 2.6.9
         bundle install
         bundle exec rake
