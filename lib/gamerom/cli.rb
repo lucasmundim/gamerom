@@ -408,18 +408,21 @@ module Gamerom
       end
     end
 
+    # Downloaded file names replace ":" with " -" (or "_-") and may use "_" for spaces,
+    # so "South Park: Chef's Luv Shack" is stored as "South_Park_-_Chef's_Luv_Shack".
+    def name_variants(name)
+      spaced = name.downcase.gsub(':', ' -')
+      [name.downcase, name.downcase.tr(' ', '_'), spaced, spaced.tr(' ', '_')].uniq
+    end
+
     def filename_matches_other_game?(filename, other_name)
-      other = other_name.downcase
-      other_underscored = other.tr(' ', '_')
-      return false unless filename.include?(other_underscored) || filename.include?(other)
+      variants = name_variants(other_name)
+      return false unless variants.any? { |variant| filename.include?(variant) }
 
       number = sequel_number(other_name)
       return filename.include?(number) if number
 
-      filename.start_with?(other_underscored) ||
-        filename.start_with?(other) ||
-        filename.include?(other_underscored.tr(':', '_')) ||
-        filename.include?(other.tr(':', '-'))
+      variants.any? { |variant| filename.start_with?(variant) }
     end
 
     def print_recovered_files(game_files)
