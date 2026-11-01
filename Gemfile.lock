@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    gamerom (0.6.0)
+    gamerom (0.7.0)
       mechanize (~> 2.14.2)
       mechanize-progressbar (~> 0.2.0)
       nokogiri (~> 1.19.4)

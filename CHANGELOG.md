@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.7.0] - 2026-11-01
+- feat: recover - match files by normalized name and tags, so re-releases such as "Mega Man 2 (Capcom Town)" and editions such as "Jeopardy! Deluxe Edition" no longer end up in the plain game's state
 - feat: edgeemu and vimm repos - multi-region releases that include USA stay under USA, otherwise the alphabetically first region
 - feat: vimm repo - read the game region from the flags shown on the list pages instead of assuming USA
 - fix: vimm repo - list pages gained a media icon before the title link, which made update_database write empty databases
@@ -58,7 +61,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2021-05-07
 - Initial release
 
-[Unreleased]: https://github.com/lucasmundim/gamerom/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/lucasmundim/gamerom/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/lucasmundim/gamerom/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/lucasmundim/gamerom/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/lucasmundim/gamerom/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/lucasmundim/gamerom/compare/v0.4.0...v0.4.1
