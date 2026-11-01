@@ -73,12 +73,13 @@ module Gamerom
       end
 
       # One region per game, taken from the flag icons. Multi-region releases that include
-      # USA stay under USA, so the vault keeps its US-centric layout; otherwise the first flag.
+      # USA stay under USA, so the vault keeps its US-centric layout; otherwise the
+      # alphabetically first flag.
       def self.region(row)
         flags = row.css('img.flag').map { |flag| flag['title'] }.compact
         return 'USA' if flags.empty? || flags.include?('USA')
 
-        flags.first
+        flags.min
       end
 
       # Vimm's Lair protects game pages with a browser challenge, so games have to be

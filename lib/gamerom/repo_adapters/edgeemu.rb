@@ -107,13 +107,13 @@ module Gamerom
 
       # One region per game from the No-Intro tags: "Espial (USA)" => "USA".
       # Multi-region releases that include USA stay under USA ("Game (USA, Europe)" => "USA"),
-      # otherwise the first region listed ("Game (Japan, Europe)" => "Japan").
+      # otherwise the alphabetically first region ("Game (Japan, Europe)" => "Europe").
       def self.region(name)
         groups = name.scan(/\(([^)]+)\)/).flatten.map { |group| group.split(',').map(&:strip) }
         regions = groups.find { |tokens| REGIONS.include?(tokens.first) }
         return 'Unknown' unless regions
 
-        regions.include?('USA') ? 'USA' : regions.first
+        regions.include?('USA') ? 'USA' : regions.min
       end
 
       def self.install(game)

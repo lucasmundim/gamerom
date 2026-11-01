@@ -63,7 +63,7 @@ RSpec.describe Gamerom::RepoAdapters::Vimm do
         { id: 2641, name: 'Madden Football 64', region: 'USA' },
         { id: 2642, name: 'Old Entry', region: 'USA' },
         { id: 2643, name: 'Euro Only', region: 'Europe' },
-        { id: 2644, name: 'Japan and Europe', region: 'Japan' }
+        { id: 2644, name: 'Japan and Europe', region: 'Europe' }
       ]
     end
 

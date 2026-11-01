@@ -38,7 +38,7 @@ RSpec.describe Gamerom::RepoAdapters::Edgeemu do
     it { expect(described_class.region('Espial (USA)')).to eq('USA') }
     it { expect(described_class.region('Game (USA, Europe) (Rev 1)')).to eq('USA') }
     it { expect(described_class.region('Game (Europe, USA)')).to eq('USA') }
-    it { expect(described_class.region('Game (Japan, Europe)')).to eq('Japan') }
+    it { expect(described_class.region('Game (Japan, Europe)')).to eq('Europe') }
     it { expect(described_class.region('Game (Rev 1) (Japan)')).to eq('Japan') }
     it { expect(described_class.region('Game (Proto)')).to eq('Unknown') }
   end
