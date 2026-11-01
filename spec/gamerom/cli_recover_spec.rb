@@ -8,6 +8,7 @@ RSpec.describe Gamerom::Cli do
       2748 => 'South Park',
       2749 => "South Park: Chef's Luv Shack",
       2750 => 'South Park Rally',
+      15_764 => 'Challenge of...NEXAR',
       546 => 'Mega Man 2',
       88_336 => 'Mega Man 2 (Capcom Town)',
       1303 => 'Jeopardy!',
@@ -69,6 +70,10 @@ RSpec.describe Gamerom::Cli do
 
     it 'does not let a title with a bang swallow its editions' do
       expect(belongs?('Jeopardy!_-_Deluxe_Edition_(USA).zip', 1303)).to be false
+    end
+
+    it 'does not mistake upper-case words after dots for extensions' do
+      expect(belongs?('Challenge of...NEXAR.zip', 15_764)).to be true
     end
 
     it 'keeps multi-disc files together' do

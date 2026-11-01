@@ -376,7 +376,7 @@ module Gamerom
     # match the file best wins, so "Mega Man 2 (Capcom Town)" takes
     # "Mega_Man_2_(USA)_(Capcom_Town).zip" and plain "Mega Man 2" leaves it alone.
     def file_belongs_to_game?(file, game, parsed_names)
-      base, tags = parse_rom_name(File.basename(file).sub(/(\.[A-Za-z0-9]{1,5})+\z/, ''))
+      base, tags = parse_rom_name(File.basename(file).sub(/(\.[a-z0-9]{1,4})+\z/, '')) # strips ".zip", ".nkit.iso"
       name_base, name_tags = parsed_names[game.id]
       return false unless base == name_base && (name_tags - tags).empty?
 
