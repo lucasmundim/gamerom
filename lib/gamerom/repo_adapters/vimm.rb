@@ -52,7 +52,8 @@ module Gamerom
       def self.extract_games(platform)
         sections.each_with_index do |section, index|
           page = nokogiri_get("https://vimm.net/vault/?p=list&system=#{platform}&section=#{section}")
-          game_links = page.css('table.hovertable td:first-child a:first-child')
+          # Each row: <td><img class="media-icon"><a href="/vault/2640">Mace: The Dark Age</a></td>...
+          game_links = page.css('table.hovertable tr td:first-child a[href^="/vault/"]')
           yield game_links.map { |game_link| game(game_link) }, index
         rescue RestClient::NotFound
           yield [], index

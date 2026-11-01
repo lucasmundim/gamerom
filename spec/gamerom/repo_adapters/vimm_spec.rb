@@ -22,3 +22,36 @@ RSpec.describe Gamerom::RepoAdapters::Vimm do
     end
   end
 end
+
+RSpec.describe Gamerom::RepoAdapters::Vimm, '.extract_games' do
+  let(:page) do
+    Nokogiri::HTML(<<~HTML)
+      <table class="rounded centered cellpadding1 hovertable striped">
+        <caption><table class="cellpadding1"><tr><th>Title</th><th>Region</th><th>Rating</th></tr></table></caption>
+        <tr>
+          <td><img src="/images/icons/cart.svg" class="media-icon"><a href="/vault/2640" onmouseover="buildTooltip(this, 2640, 320, 240)">Mace: The Dark Age</a></td>
+          <td><img src="/images/flags/usa.png" class="flag" title="USA"></td>
+          <td><a href="/vault/?p=rating&amp;id=2640">8.1</a></td>
+        </tr>
+        <tr>
+          <td><img src="/images/icons/cart.svg" class="media-icon"><a href="/vault/2641" onmouseover="buildTooltip(this, 2641, 320, 240)">Madden Football 64</a></td>
+          <td></td><td></td>
+        </tr>
+      </table>
+    HTML
+  end
+
+  before do
+    allow(described_class).to receive(:sections).and_return(['m'])
+    allow(described_class).to receive(:nokogiri_get).and_return(page)
+  end
+
+  it 'extracts one game per row, ignoring the rating links' do
+    games = []
+    described_class.extract_games('N64') { |section_games, _index| games.concat(section_games) }
+    expect(games).to eq([
+      { id: 2640, name: 'Mace: The Dark Age', region: 'USA' },
+      { id: 2641, name: 'Madden Football 64', region: 'USA' },
+    ])
+  end
+end

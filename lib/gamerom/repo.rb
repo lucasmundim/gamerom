@@ -77,8 +77,14 @@ module Gamerom
 
     def update_database(platform)
       games = @repo.games platform
-      FileUtils.mkdir_p("#{Gamerom::CACHE_DIR}/#{@name}")
-      File.write("#{Gamerom::CACHE_DIR}/#{@name}/#{platform}.yml", games.to_yaml)
+      database = "#{Gamerom::CACHE_DIR}/#{@name}/#{platform}.yml"
+      # An empty crawl means the site changed or blocked us; never wipe a good database over it.
+      if games.empty? && File.exist?(database) && !YAML.load_file(database).empty?
+        raise Gamerom::Error, "no games found for #{platform} on #{@name}, keeping the existing database"
+      end
+
+      FileUtils.mkdir_p(File.dirname(database))
+      File.write(database, games.to_yaml)
     end
   end
 end
