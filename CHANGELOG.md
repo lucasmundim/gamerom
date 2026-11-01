@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.6.0] - 2026-11-01
 - feat: add edgeemu repo (https://edgeemu.net), 48 platforms
 - feat: recover - do not claim files that belong to a game with a longer name (e.g. "Kung-Fu" vs "Kung-Fu Master")
 - feat: use ruby 3.4.12 and update all dependencies
@@ -51,7 +53,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2021-05-07
 - Initial release
 
-[Unreleased]: https://github.com/lucasmundim/gamerom/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/lucasmundim/gamerom/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/lucasmundim/gamerom/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/lucasmundim/gamerom/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/lucasmundim/gamerom/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/lucasmundim/gamerom/compare/v0.3.0...v0.4.0
