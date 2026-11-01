@@ -2,27 +2,38 @@
 
 require 'tmpdir'
 
-RSpec.describe Gamerom::Repo, '#update_database' do
-  let(:repo) { described_class.new('vimm') }
+RSpec.describe Gamerom::Repo do
+  describe '#update_database' do
+    let(:repo) { described_class.new('vimm') }
+    let(:cache_dir) { Dir.mktmpdir }
+    let(:database) { "#{cache_dir}/vimm/N64.yml" }
 
-  let(:cache_dir) { Dir.mktmpdir }
+    before do
+      stub_const('Gamerom::CACHE_DIR', cache_dir)
+      allow(Gamerom::RepoAdapters::Vimm).to receive(:games).and_return([])
+    end
 
-  before { stub_const('Gamerom::CACHE_DIR', cache_dir) }
-  after { FileUtils.rm_rf(cache_dir) }
+    after { FileUtils.rm_rf(cache_dir) }
 
-  it 'refuses to overwrite a populated database with an empty crawl' do
-    FileUtils.mkdir_p("#{Gamerom::CACHE_DIR}/vimm")
-    File.write("#{Gamerom::CACHE_DIR}/vimm/N64.yml", [{ id: 1, name: 'Game', region: 'USA' }].to_yaml)
-    allow(Gamerom::RepoAdapters::Vimm).to receive(:games).and_return([])
+    context 'when the crawl finds no games but a populated database exists' do
+      before do
+        FileUtils.mkdir_p(File.dirname(database))
+        File.write(database, [{ id: 1, name: 'Game', region: 'USA' }].to_yaml)
+      end
 
-    expect { repo.update_database('N64') }.to raise_error(Gamerom::Error, /keeping the existing database/)
-    expect(YAML.load_file("#{Gamerom::CACHE_DIR}/vimm/N64.yml").size).to eq(1)
-  end
+      it 'raises instead of overwriting it' do
+        expect { repo.update_database('N64') }.to raise_error(Gamerom::Error, /keeping the existing database/)
+      end
 
-  it 'writes an empty database when there was none before' do
-    allow(Gamerom::RepoAdapters::Vimm).to receive(:games).and_return([])
+      it 'keeps the existing games', :aggregate_failures do
+        expect { repo.update_database('N64') }.to raise_error(Gamerom::Error)
+        expect(YAML.load_file(database).size).to eq(1)
+      end
+    end
 
-    repo.update_database('N64')
-    expect(YAML.load_file("#{Gamerom::CACHE_DIR}/vimm/N64.yml")).to eq([])
+    it 'writes an empty database when there was none before' do
+      repo.update_database('N64')
+      expect(YAML.load_file(database)).to eq([])
+    end
   end
 end
