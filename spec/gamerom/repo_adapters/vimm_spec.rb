@@ -41,6 +41,16 @@ RSpec.describe Gamerom::RepoAdapters::Vimm do
             <td><img src="/images/icons/cart.svg" class="media-icon"><a href="/vault/2642">Old Entry</a></td>
             <td></td><td></td>
           </tr>
+          <tr>
+            <td><img src="/images/icons/cart.svg" class="media-icon"><a href="/vault/2643">Euro Only</a></td>
+            <td><img src="/images/flags/europe.png" class="flag" title="Europe"></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><img src="/images/icons/cart.svg" class="media-icon"><a href="/vault/2644">Japan and Europe</a></td>
+            <td><img src="/images/flags/japan.png" class="flag" title="Japan"><img src="/images/flags/europe.png" class="flag" title="Europe"></td>
+            <td></td>
+          </tr>
         </table>
       HTML
     end
@@ -50,11 +60,13 @@ RSpec.describe Gamerom::RepoAdapters::Vimm do
 
     before { allow(described_class).to receive_messages(sections: ['m'], nokogiri_get: page) }
 
-    it 'extracts one game per row with the region from the flags' do
+    it 'extracts one game per row, preferring USA among the region flags' do
       expect(games).to eq([
                             { id: 2640, name: 'Mace: The Dark Age', region: 'USA' },
-                            { id: 2641, name: 'Madden Football 64', region: 'USA, Europe' },
-                            { id: 2642, name: 'Old Entry', region: 'USA' }
+                            { id: 2641, name: 'Madden Football 64', region: 'USA' },
+                            { id: 2642, name: 'Old Entry', region: 'USA' },
+                            { id: 2643, name: 'Euro Only', region: 'Europe' },
+                            { id: 2644, name: 'Japan and Europe', region: 'Japan' }
                           ])
     end
   end
