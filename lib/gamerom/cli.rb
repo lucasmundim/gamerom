@@ -80,7 +80,7 @@ module Gamerom
           next
         end
         install(game.id)
-      rescue Exception => e
+      rescue StandardError, SystemExit => e
         shell.say "Error installing game #{game.name}: #{e.message}", :red
       end
     rescue StandardError => e
@@ -122,82 +122,12 @@ module Gamerom
       validate_platform repo, options[:platform]
       puts "recovering state of roms for #{options[:platform]} platform on #{options[:repo]} repo..."
       games = repo.games options[:platform]
-      games_not_found = []
-      games_found = []
-      games_already_installed = []
-      games.each do |game|
-        puts
-        puts "Checking game #{game}"
-        if game.filenames.any?
-          filename = game.filenames.first
-          puts "#{shell.set_color('*', :green)} Found game at: #{filename}"
-          games_already_installed << game.name
-          next
-        end
-        
-        game_path = "#{Gamerom::GAME_DIR}/#{repo.name}/#{options[:platform]}/#{game.region}"
-        original_name = game.name
-        underscored_name = original_name.tr(" ", "_")
+      game_names = games.to_h { |game| [game.id, game.name] }
+      results = games.group_by { |game| recover_game(game, game_names) }
 
-        glob_escape = lambda do |str, spacer = ' '|
-          str.
-          gsub(/([\\\[\]\*\?\{\}\)\ ,])/, '\\\\\1').
-          gsub(/:/, "#{spacer}-").
-          gsub(/!/, '\!*').
-          gsub(/\(/, '*\(')
-        end
-
-        # Escape both variants for glob
-        escaped_original = glob_escape.call(original_name)
-        escaped_underscored = glob_escape.call(underscored_name, '_')
-
-        # Try both patterns
-        patterns = [
-          "#{game_path}/#{escaped_underscored}*",
-          "#{game_path}/#{escaped_original}*"
-        ]
-
-        game_files = []
-        patterns.each do |pattern|
-          matches = Dir.glob(pattern)
-          game_files.concat(matches) if matches.any?
-        end
-        game_files.uniq! # Remove any duplicates
-        
-        if game_files.any?
-          # Sort files to ensure consistent order (important for multi-disk games)
-          game_files.sort!
-          
-          # Extract basenames for state storage
-          filenames = game_files.map { |file| File.basename(file) }
-          
-          # Update game state with all found files
-          game.update_state filenames
-          
-          if game_files.size > 1
-            puts "#{shell.set_color('*', :green)} Found #{game_files.size} disks for game:"
-            game_files.each { |file| puts "  - #{file}" }
-          else
-            puts "#{shell.set_color('*', :green)} Found game at: #{game_files.first}"
-          end
-          
-          games_found << original_name
-        else
-          puts "#{shell.set_color('*', :red)} not found using patterns:"
-          patterns.each { |p| puts "  #{p}" }
-          games_not_found << original_name
-        end
-      end
-      
-      if games_not_found.count.positive?
-        puts "#{shell.set_color(games_found.count, :green)} games found"
-        puts "#{shell.set_color(games_already_installed.count, :yellow)} games already installed"
-        puts "#{shell.set_color(games_not_found.count, :red)} games not found"
-      else
-        puts "All #{games_found.count} games found"
-      end
+      print_recover_summary(results.fetch(:found, []), results.fetch(:already_installed, []), results.fetch(:not_found, []))
     rescue StandardError => e
-      puts e.message
+      render_error e, options
       exit 1
     end
 
@@ -391,6 +321,114 @@ module Gamerom
       return if repo.platforms.keys.include? options[:platform]
 
       raise "Expected '--platform' to be one of #{repo.platforms.keys.join(", ")}; got #{platform}"
+    end
+
+    # Recover helpers
+
+    def recover_game(game, game_names)
+      puts
+      puts "Checking game #{game}"
+      if game.filenames.any?
+        puts "#{shell.set_color("*", :green)} Found game at: #{game.filenames.first}"
+        return :already_installed
+      end
+
+      game_files = glob_game_files(game).select { |file| file_belongs_to_game?(file, game, game_names) }.sort
+      if game_files.empty?
+        puts "#{shell.set_color("*", :red)} not found"
+        return :not_found
+      end
+
+      game.update_state(game_files.map { |file| File.basename(file) })
+      print_recovered_files(game_files)
+      :found
+    end
+
+    def glob_game_files(game)
+      patterns = [
+        glob_escape(game.name.tr(' ', '_'), '_'),
+        glob_escape(game.name, ' ')
+      ]
+      patterns.flat_map { |pattern| Dir.glob("#{game.filepath}/#{pattern}*") }.uniq
+    end
+
+    def glob_escape(str, spacer)
+      str
+        .gsub(/([\\\[\]*?{}) ,])/, '\\\\\1')
+        .gsub(':', "#{spacer}-")
+        .gsub('!', '\!*')
+        .gsub('(', '*\(')
+    end
+
+    # A globbed file is kept for a game unless it is a better match for another
+    # game whose name starts with this game's name (e.g. "Kung-Fu" vs "Kung-Fu Master").
+    def file_belongs_to_game?(file, game, game_names)
+      filename = File.basename(file).downcase
+      return true if exact_filename_match?(filename, game.name.downcase)
+
+      number = sequel_number(game.name)
+      return true if number && filename.include?(number)
+      return true if game.name.include?('Limited Run Games') && filename.include?('limited_run')
+
+      !claimed_by_other_game?(filename, game, game_names)
+    end
+
+    # "Game.zip", "Game_Name.zip" or "Game (USA).zip"
+    def exact_filename_match?(filename, name)
+      [name, name.tr(' ', '_')].any? do |variant|
+        filename.match?(/\A#{Regexp.escape(variant)}(\s*\(\w+\))?\.\w+\z/i)
+      end
+    end
+
+    # The number that identifies a sequel, e.g. "2" in "Tony Hawk's Pro Skater 2"
+    def sequel_number(name)
+      match = name.match(/(\d+|\s+\d+)[\s':]/) || name.match(/\s(\d+)$/)
+      match && match[1].strip
+    end
+
+    def claimed_by_other_game?(filename, game, game_names)
+      name = game.name.downcase
+      game_names.any? do |other_id, other_name|
+        next false if other_id == game.id
+
+        other = other_name.downcase
+        next false unless other.length > name.length && other.start_with?(name)
+
+        filename_matches_other_game?(filename, other_name)
+      end
+    end
+
+    def filename_matches_other_game?(filename, other_name)
+      other = other_name.downcase
+      other_underscored = other.tr(' ', '_')
+      return false unless filename.include?(other_underscored) || filename.include?(other)
+
+      number = sequel_number(other_name)
+      return filename.include?(number) if number
+
+      filename.start_with?(other_underscored) ||
+        filename.start_with?(other) ||
+        filename.include?(other_underscored.tr(':', '_')) ||
+        filename.include?(other.tr(':', '-'))
+    end
+
+    def print_recovered_files(game_files)
+      if game_files.size > 1
+        puts "#{shell.set_color("*", :green)} Found #{game_files.size} disks for game:"
+        game_files.each { |file| puts "  - #{file}" }
+      else
+        puts "#{shell.set_color("*", :green)} Found game at: #{game_files.first}"
+      end
+    end
+
+    def print_recover_summary(games_found, games_already_installed, games_not_found)
+      if games_not_found.empty?
+        puts "All #{games_found.count + games_already_installed.count} games found"
+      else
+        puts "#{shell.set_color(games_found.count, :green)} games found"
+        puts "#{shell.set_color(games_already_installed.count, :yellow)} games already installed"
+        puts "#{shell.set_color(games_not_found.count, :red)} games not found"
+      end
     end
   end
 end
