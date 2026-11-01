@@ -52,20 +52,30 @@ module Gamerom
       def self.extract_games(platform)
         sections.each_with_index do |section, index|
           page = nokogiri_get("https://vimm.net/vault/?p=list&system=#{platform}&section=#{section}")
-          # Each row: <td><img class="media-icon"><a href="/vault/2640">Mace: The Dark Age</a></td>...
-          game_links = page.css('table.hovertable tr td:first-child a[href^="/vault/"]')
-          yield game_links.map { |game_link| game(game_link) }, index
+          rows = page.css('table.hovertable tr').select { |row| row.at_css(TITLE_LINK) }
+          yield rows.map { |row| game(row) }, index
         rescue RestClient::NotFound
           yield [], index
         end
       end
 
-      def self.game(game_link)
+      # Each row: <td><img class="media-icon"><a href="/vault/2640">Mace: The Dark Age</a></td>
+      #           <td><img class="flag" title="USA"></td>...
+      TITLE_LINK = 'td:first-child a[href^="/vault/"]'
+
+      def self.game(row)
+        link = row.at_css(TITLE_LINK)
         {
-          id: game_link['href'].split('/').last.to_i,
-          name: game_link.text,
-          region: 'USA',
+          id: link['href'].split('/').last.to_i,
+          name: link.text,
+          region: region(row),
         }
+      end
+
+      # Region flags, e.g. "USA" or "USA, Europe"; older entries without flags are USA releases
+      def self.region(row)
+        flags = row.css('img.flag').map { |flag| flag['title'] }.compact
+        flags.empty? ? 'USA' : flags.join(', ')
       end
 
       # Vimm's Lair protects game pages with a browser challenge, so games have to be

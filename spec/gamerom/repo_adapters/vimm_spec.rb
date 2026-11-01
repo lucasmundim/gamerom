@@ -34,6 +34,11 @@ RSpec.describe Gamerom::RepoAdapters::Vimm do
           </tr>
           <tr>
             <td><img src="/images/icons/cart.svg" class="media-icon"><a href="/vault/2641" onmouseover="buildTooltip(this, 2641, 320, 240)">Madden Football 64</a></td>
+            <td><img src="/images/flags/usa.png" class="flag" title="USA"><img src="/images/flags/europe.png" class="flag" title="Europe"></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><img src="/images/icons/cart.svg" class="media-icon"><a href="/vault/2642">Old Entry</a></td>
             <td></td><td></td>
           </tr>
         </table>
@@ -45,10 +50,11 @@ RSpec.describe Gamerom::RepoAdapters::Vimm do
 
     before { allow(described_class).to receive_messages(sections: ['m'], nokogiri_get: page) }
 
-    it 'extracts one game per row, ignoring the rating links' do
+    it 'extracts one game per row with the region from the flags' do
       expect(games).to eq([
                             { id: 2640, name: 'Mace: The Dark Age', region: 'USA' },
-                            { id: 2641, name: 'Madden Football 64', region: 'USA' }
+                            { id: 2641, name: 'Madden Football 64', region: 'USA, Europe' },
+                            { id: 2642, name: 'Old Entry', region: 'USA' }
                           ])
     end
   end

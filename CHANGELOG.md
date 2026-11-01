@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- feat: vimm repo - read the game region from the flags shown on the list pages instead of assuming USA
+- fix: vimm repo - list pages gained a media icon before the title link, which made update_database write empty databases
+- fix: update_database refuses to replace a populated database with an empty crawl
+- fix: honor Retry-After on 429 responses and keep updating the other databases when one platform fails
 
 ## [0.6.0] - 2026-11-01
 - feat: add edgeemu repo (https://edgeemu.net), 48 platforms
